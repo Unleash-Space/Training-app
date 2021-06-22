@@ -33,8 +33,6 @@ export class ApiService {
       const month = parseInt(dateArray[1]);
       const date = parseInt(dateArray[2]);
 
-      console.log;
-
       if (
         year == NOW.getFullYear() &&
         month == NOW.getMonth() + 1 &&

@@ -1,30 +1,19 @@
-import { Component } from '@angular/core';
+import { eventbriteEvent } from './classes';
+import { ApiService } from './api.service';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'front-end';
-  trainings = [
-    {
-      title: 'viynl',
-      time: '3pm',
-      complete: false,
-      users: [
-        { name: 'a', id: 1234, upi: 'abc123', attended: true },
-        { name: 'b', id: 1234, upi: 'abc123', attended: true },
-      ],
-    },
-    {
-      title: 'Lasers',
-      time: '3pm',
-      complete: false,
-      users: [
-        { name: 'a', id: 1234, upi: 'abc123', attended: true },
-        { name: 'b', id: 1234, upi: 'abc123', attended: true },
-      ],
-    },
-  ];
+  trainings: any = [];
+
+  constructor(public api: ApiService) {}
+
+  async ngOnInit() {
+    this.trainings = await this.api.getTodaysEvents();
+  }
 }
