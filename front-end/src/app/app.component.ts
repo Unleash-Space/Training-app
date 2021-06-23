@@ -15,5 +15,7 @@ export class AppComponent implements OnInit {
 
   async ngOnInit() {
     this.trainings = await this.api.getTodaysEvents();
+
+    console.log(this.trainings);
   }
 }
