@@ -1,16 +1,22 @@
 import { Injectable } from '@angular/core';
 import { KEYS } from './keys';
 import { eventbriteEvent } from './classes';
-import { GoogleSheetsDbService } from 'ng-google-sheets-db';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
+import { GoogleApiService, GoogleAuthService } from 'ng-gapi';
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
   eventbriteURL = `https://www.eventbriteapi.com/v3/organizations/${KEYS.eventbriteOrganisation}`;
+  public static SESSION_STORAGE_KEY: string = 'accessToken';
+  private user: any;
 
-  constructor(public http: HttpClient) {}
+  constructor(
+    public http: HttpClient,
+    private googleAuth: GoogleAuthService,
+    public gapiService: GoogleApiService
+  ) {}
 
   async getTodaysEvents() {
     const NOW = new Date();
@@ -67,8 +73,44 @@ export class ApiService {
     return attendees;
   }
 
+  public async insertData(data: any, table: string) {
+    var API_URL: string = `https://sheets.googleapis.com/v4/spreadsheets/${KEYS.sheetID}/values/'${table}'!A:A:append/?valueInputOption=RAW`;
+
+    var res = await this.http
+      .post(API_URL, data, {
+        headers: new HttpHeaders({
+          Authorization: `Bearer ${this.getToken()}`,
+        }),
+      })
+      .toPromise();
+  }
+
+  public getToken() {
+    let token = sessionStorage.getItem(ApiService.SESSION_STORAGE_KEY);
+    if (!token) {
+      throw new Error('no token set , authentication required');
+    }
+    return sessionStorage.getItem(ApiService.SESSION_STORAGE_KEY);
+  }
+
+  public signIn(): void {
+    this.googleAuth.getAuth().subscribe((auth: any) => {
+      auth.signIn().then((res: any) => this.signInSuccessHandler(res));
+    });
+  }
+
+  private signInSuccessHandler(res: any) {
+    this.user = res;
+    sessionStorage.setItem(
+      ApiService.SESSION_STORAGE_KEY,
+      res.getAuthResponse().access_token
+    );
+  }
+
   public async baseGet(url: string) {
-    var res: any = await this.http.get(url).toPromise();
+    var res: any = await this.http
+      .get(url, { withCredentials: true })
+      .toPromise();
     return res;
   }
 }
