@@ -1,0 +1,52 @@
+.container {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.attendee-data table {
+  width: 100%;
+}
+.attendee-data table tr th {
+  text-align: left;
+}
+.attendee-data table tr td mat-form-field {
+  width: calc(100% - 10px);
+}
+
+.header {
+  background-color: #303030;
+}
+.header img {
+  height: 50px;
+  margin: 20px;
+}
+
+h1,
+h2 {
+  text-align: center;
+}
+
+.section-title {
+  text-align: left;
+}
+
+.button-row {
+  float: right;
+}
+.button-row button {
+  margin: 10px;
+  font-size: 1em;
+  padding: 10px 30px;
+}
+
+mat-checkbox {
+  ::ng-deep .mat-checkbox-inner-container {
+    width: 55px;
+    height: 55px;
+    margin-bottom: 15px;
+  }
+}
+
+.event-select {
+  width: 100%;
+}

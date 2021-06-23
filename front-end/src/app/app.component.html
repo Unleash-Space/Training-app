@@ -1,8 +1,69 @@
-<mat-accordion>
-  <mat-expansion-panel *ngFor="let training of trainings">
-    <mat-expansion-panel-header>{{
-      training.title
-    }}</mat-expansion-panel-header>
-    USERS ng for here
-  </mat-expansion-panel>
-</mat-accordion>
+<div class="header">
+  <img src="assets/unleash-space.png" />
+</div>
+
+<div class="container">
+  <h1>Unleash Space event attendance</h1>
+
+  <!-- <div>
+    <mat-accordion>
+      <mat-expansion-panel *ngFor="let training of trainings">
+        <mat-expansion-panel-header>
+          <b>{{ training.title }}</b>
+        </mat-expansion-panel-header>
+        USERS ng for here
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div> -->
+
+  <mat-form-field class="event-select" appearance="fill">
+    <mat-label>Select an event</mat-label>
+    <mat-select>
+      <mat-option *ngFor="let training of trainings">
+        {{ training.title }}
+      </mat-option>
+      <!-- <mat-option value="js">JAVASCRIPT</mat-option> -->
+    </mat-select>
+  </mat-form-field>
+
+  <h2 class="event-title">Event details...</h2>
+
+  <h2 class="section-title">Attendees</h2>
+
+  <form class="attendee-data">
+    <table cellspacing="0">
+      <tr>
+        <th>Name</th>
+        <th>UPI</th>
+        <th>ID</th>
+        <th>Attended</th>
+      </tr>
+      <tr *ngFor="let attendee of attendees">
+        <td>
+          <mat-form-field appearance="fill">
+            <input matInput placeholder="Name" value="{{ attendee.name }}" />
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field appearance="fill">
+            <input matInput placeholder="UPI" value="{{ attendee.upi }}" />
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field appearance="fill">
+            <input matInput placeholder="ID" value="{{ attendee.id }}" />
+          </mat-form-field>
+        </td>
+
+        <td>
+          <mat-checkbox></mat-checkbox>
+        </td>
+      </tr>
+    </table>
+  </form>
+
+  <div class="button-row">
+    <button mat-raised-button>New attendee</button>
+    <button mat-raised-button color="primary">Submit</button>
+  </div>
+</div>
