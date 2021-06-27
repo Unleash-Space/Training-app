@@ -53,17 +53,15 @@ export class AppComponent implements AfterContentInit {
   submitData() {
     var table = '';
 
-    if (this.selectedEvent.description.includes('router')) {
-      table = 'CNC Router';
-    }
+    if (this.selectedEvent.summary.includes('router')) table = 'CNC Router';
+    else if (this.selectedEvent.summary.includes('Laser'))
+      table = 'Laser Cutter';
+    else if (this.selectedEvent.summary.includes('3D')) table = '3D Printer';
+    else if (this.selectedEvent.summary.includes('Vinyl'))
+      table = 'Vinyl Cutter';
+    else if (this.selectedEvent.summary.includes('Sewing'))
+      table = 'Sewing Machine';
 
-    const body = {
-      values: [
-        ['1/1/1', 768485633, this.selectedFacilitator],
-        ['1/1/1', 12345, this.selectedFacilitator],
-      ],
-    };
-
-    this.api.insertData(body, table);
+    this.api.insertData(this.selectedEvent, table);
   }
 }
