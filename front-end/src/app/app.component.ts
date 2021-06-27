@@ -1,4 +1,4 @@
-import { eventbriteEvent } from './classes';
+import { eventbriteEvent, attendee } from './classes';
 import { AfterContentInit, Component, OnInit } from '@angular/core';
 import { supportsWebAnimations } from '@angular/animations/browser/src/render/web_animations/web_animations_driver';
 import {
@@ -16,7 +16,7 @@ import { ApiService } from './api.service';
 })
 export class AppComponent implements AfterContentInit {
   title = 'front-end';
-  selectedFacilitator = 'FRED!';
+  selectedFacilitator = '';
   selectedEvent: any;
   trainings: eventbriteEvent[] = [];
 
@@ -35,9 +35,7 @@ export class AppComponent implements AfterContentInit {
 
   async ngAfterContentInit() {
     this.trainings = await this.api.getTodaysEvents();
-
-    console.log(await this.trainings);
-    // console.log(this.trainings);
+    this.api.signIn();
   }
 
   login() {

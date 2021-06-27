@@ -17,4 +17,5 @@ export class attendee {
   id?: string;
   upi?: string;
   email?: string;
+  attending?: boolean;
 }

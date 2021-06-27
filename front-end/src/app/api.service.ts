@@ -68,6 +68,7 @@ export class ApiService {
 
     raw.forEach((e: any) => {
       attendees.push({
+        attending: false,
         name: e.profile.name,
         email: e.profile.email,
         upi: e.answers.find((answer: any) => answer.question === 'UPI').answer,

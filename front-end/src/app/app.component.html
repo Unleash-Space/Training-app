@@ -14,7 +14,7 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field class="facilitator-select" appearance="fill">
+  <mat-form-field class="facilitator-select" appearance="fill" required>
     <mat-label>Select the facilitator</mat-label>
     <mat-select [(ngModel)]="selectedFacilitator">
       <mat-option
@@ -32,7 +32,7 @@
 
     <h2 class="section-title">Attendees</h2>
 
-    <form class="attendee-data">
+    <div class="attendee-data">
       <table cellspacing="0">
         <tr>
           <th>Name</th>
@@ -73,11 +73,11 @@
           </td>
 
           <td>
-            <mat-checkbox></mat-checkbox>
+            <mat-checkbox [(ngModel)]="attendee.attending"></mat-checkbox>
           </td>
         </tr>
       </table>
-    </form>
+    </div>
 
     <div class="button-row">
       <button mat-raised-button (click)="newAttendee()">New attendee</button>
