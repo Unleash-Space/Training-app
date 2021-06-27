@@ -1,5 +1,5 @@
 import { eventbriteEvent } from './classes';
-import { Component, OnInit } from '@angular/core';
+import { AfterContentInit, Component, OnInit } from '@angular/core';
 import { supportsWebAnimations } from '@angular/animations/browser/src/render/web_animations/web_animations_driver';
 import {
   MatDialog,
@@ -16,7 +16,6 @@ import { ApiService } from './api.service';
 })
 export class AppComponent implements AfterContentInit {
   title = 'front-end';
-  trainings: any = [];
   selectedFacilitator = 'FRED!';
   selectedEvent = { title: 'router' };
   trainings = [
@@ -77,6 +76,8 @@ export class AppComponent implements AfterContentInit {
     'Caroline Brown',
   ];
 
+  constructor(public api: ApiService) {}
+
   async ngAfterContentInit() {
     // this.trainings = await this.api.getTodaysEvents();
     // console.log(this.trainings);
@@ -92,10 +93,6 @@ export class AppComponent implements AfterContentInit {
       upi: '',
       id: '',
     });
-  }
-
-  submit() {
-    const dialogRef = this.dialog.open(DialogContentExampleDialog);
   }
 
   eventSelected() {}
@@ -117,9 +114,3 @@ export class AppComponent implements AfterContentInit {
     this.api.insertData(body, table);
   }
 }
-
-@Component({
-  selector: 'dialog-content-example-dialog',
-  template: 'dialog-content-example-dialog.html',
-})
-export class DialogContentExampleDialog {}
