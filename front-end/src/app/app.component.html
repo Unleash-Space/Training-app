@@ -5,15 +5,11 @@
 <div class="container">
   <h1>Unleash Space event attendance</h1>
 
-  <mat-form-field
-    class="event-select"
-    appearance="fill"
-    (change)="eventSelected()"
-  >
+  <mat-form-field class="event-select" appearance="fill">
     <mat-label>Select an event</mat-label>
     <mat-select [(ngModel)]="selectedEvent">
-      <mat-option *ngFor="let training of trainings" [value]="training.title">
-        {{ training.title }}
+      <mat-option *ngFor="let training of trainings" [value]="training.summary">
+        {{ training.summary }}
       </mat-option>
     </mat-select>
   </mat-form-field>
@@ -32,7 +28,7 @@
 
   <div class="attendee-section" *ngIf="selectedEvent">
     <mat-divider></mat-divider>
-    <h2 class="event-title">{{ selectedEvent }}</h2>
+    <h2 class="event-title">{{ selectedEvent.summary }}</h2>
 
     <h2 class="section-title">Attendees</h2>
 
@@ -44,7 +40,7 @@
           <th>ID</th>
           <th>Attended</th>
         </tr>
-        <tr *ngFor="let attendee of attendees">
+        <tr *ngFor="let attendee of selectedEvent.attendees">
           <td>
             <mat-form-field appearance="fill">
               <input
