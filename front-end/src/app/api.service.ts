@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { KEYS } from './keys';
-import { eventbriteEvent } from './classes';
+import { attendee, eventbriteEvent } from './classes';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { GoogleApiService, GoogleAuthService } from 'ng-gapi';
@@ -61,13 +61,20 @@ export class ApiService {
   }
 
   async getEventAttendees(id: string) {
-    var attendees: any[] = [];
+    var attendees: attendee[] = [];
     const URL = `https://www.eventbriteapi.com/v3/events/${id}/attendees/?token=${KEYS.eventbrite}`;
 
     var raw = (await this.baseGet(URL)).attendees;
 
     raw.forEach((e: any) => {
-      attendees.push(e.profile);
+      attendees.push({
+        name: e.profile.name,
+        email: e.profile.email,
+        upi: e.answers.find((answer: any) => answer.question === 'UPI').answer,
+        id: e.answers.find((answer: any) => answer.question === 'UoA ID')
+          .answer,
+      });
+      console.log(attendees);
     });
 
     return attendees;

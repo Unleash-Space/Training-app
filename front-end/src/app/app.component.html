@@ -8,7 +8,7 @@
   <mat-form-field class="event-select" appearance="fill">
     <mat-label>Select an event</mat-label>
     <mat-select [(ngModel)]="selectedEvent">
-      <mat-option *ngFor="let training of trainings" [value]="training.summary">
+      <mat-option *ngFor="let training of trainings" [value]="training">
         {{ training.summary }}
       </mat-option>
     </mat-select>
