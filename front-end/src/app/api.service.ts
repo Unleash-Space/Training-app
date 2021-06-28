@@ -41,13 +41,30 @@ export class ApiService {
     });
 
     todayEvents.forEach((e) => {
+      console.log(e);
+      const date = new Date(e.start.local);
+
+      const minutes = date.getMinutes() ? `:${date.getMinutes()}` : '';
+
+      let time =
+        date.getHours() > 12
+          ? `${date.getHours() - 12}${minutes} PM`
+          : `${date.getHours()}${minutes} AM`;
+      if (date.getHours() === 12) time = `${date.getHours()}${minutes} PM`;
+
       const format = {
         capacity: e.capacity,
         description: e.description,
         summary: e.summary,
+        title: e.name.text,
+
         id: e.id,
         start: e.start,
         attendees: e.attendees,
+        date: {
+          date: `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`,
+          time: time,
+        },
       };
 
       events.push(format);
@@ -137,6 +154,7 @@ export class ApiService {
 
   public async baseGet(url: string) {
     var res: any = await this.http.get(url).toPromise();
+
     return res;
   }
 }

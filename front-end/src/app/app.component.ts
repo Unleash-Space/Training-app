@@ -1,6 +1,5 @@
 import { eventbriteEvent, attendee } from './classes';
 import { AfterContentInit, Component, OnInit } from '@angular/core';
-import { supportsWebAnimations } from '@angular/animations/browser/src/render/web_animations/web_animations_driver';
 import {
   MatDialog,
   MatDialogRef,
@@ -15,8 +14,7 @@ import { ApiService } from './api.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements AfterContentInit {
-  title = 'front-end';
-  selectedFacilitator = '';
+  selectedFacilitator: string = '';
   selectedEvent: any;
   trainings: eventbriteEvent[] = [];
 
