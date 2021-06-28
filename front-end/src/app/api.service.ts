@@ -81,15 +81,35 @@ export class ApiService {
     return attendees;
   }
 
-  public async insertData(data: any, table: string) {
+  public async insertData(
+    data: eventbriteEvent,
+    table: string,
+    facilitator: string
+  ) {
+    console.log(data);
+
+    let body: any[] = [];
+
+    data.attendees?.forEach((e) => {
+      if (e.attending) {
+        body.push([data.date.date, parseInt(e.id), facilitator]);
+      }
+    });
+
+    console.log(body);
+
     var API_URL: string = `https://sheets.googleapis.com/v4/spreadsheets/${KEYS.sheetID}/values/'${table}'!A:A:append/?valueInputOption=RAW`;
 
     var res = await this.http
-      .post(API_URL, data, {
-        headers: new HttpHeaders({
-          Authorization: `Bearer ${this.getToken()}`,
-        }),
-      })
+      .post(
+        API_URL,
+        { values: body },
+        {
+          headers: new HttpHeaders({
+            Authorization: `Bearer ${this.getToken()}`,
+          }),
+        }
+      )
       .toPromise();
   }
 
