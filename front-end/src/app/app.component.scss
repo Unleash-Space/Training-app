@@ -50,3 +50,27 @@ mat-checkbox {
 .event-select {
   width: 100%;
 }
+
+.ConfirmContainer {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background-color: #2229;
+  left: 0;
+  top: 0;
+
+  .modal {
+    width: 50%;
+    height: 20%;
+    margin: auto;
+    margin-top: 25vh;
+    background-color: #303030;
+    padding: 100px;
+
+    button {
+      margin: 10px;
+      font-size: 1em;
+      padding: 10px 30px;
+    }
+  }
+}

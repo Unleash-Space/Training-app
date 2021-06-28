@@ -93,9 +93,23 @@
 
     <div class="button-row">
       <button mat-raised-button (click)="newAttendee()">New attendee</button>
-      <button mat-raised-button color="primary" (click)="submitData()">
+      <button mat-raised-button color="primary" (click)="showConfirm = true">
         Submit
       </button>
     </div>
+  </div>
+</div>
+
+<div *ngIf="showConfirm" class="ConfirmContainer" (click)="showConfirm = false">
+  <div class="modal">
+    <h2>Please confirm</h2>
+    <ul>
+      <li>UPIs and IDs are correct</li>
+      <li>The Training is correct</li>
+      <li>You are the facilitator</li>
+    </ul>
+    <button mat-raised-button color="primary" (click)="submitData()">
+      Confirm
+    </button>
   </div>
 </div>

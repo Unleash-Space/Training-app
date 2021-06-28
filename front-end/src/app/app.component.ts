@@ -1,11 +1,5 @@
 import { eventbriteEvent, attendee } from './classes';
-import { AfterContentInit, Component, OnInit } from '@angular/core';
-import {
-  MatDialog,
-  MatDialogRef,
-  MAT_DIALOG_DATA,
-} from '@angular/material/dialog';
-import { ConfirmComponent } from './confirm/confirm.component';
+import { AfterContentInit, Component } from '@angular/core';
 import { ApiService } from './api.service';
 
 @Component({
@@ -17,6 +11,7 @@ export class AppComponent implements AfterContentInit {
   selectedFacilitator: string = '';
   selectedEvent: any;
   trainings: eventbriteEvent[] = [];
+  showConfirm = false;
 
   facilitators = [
     'Hayden Moore',
@@ -33,7 +28,7 @@ export class AppComponent implements AfterContentInit {
 
   async ngAfterContentInit() {
     this.trainings = await this.api.getTodaysEvents();
-    this.api.signIn();
+    // this.api.signIn();
   }
 
   login() {
