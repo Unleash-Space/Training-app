@@ -11,7 +11,7 @@
         "**/e2e": true,
         "**/node_modules": true,
         "**/packag*.json": false,
-        "**/ts*.json": false
+        "**/ts*.json": true
     },
     "explorerExclude.backup": null
 }
