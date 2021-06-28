@@ -51,7 +51,7 @@ mat-checkbox {
   width: 100%;
 }
 
-.ConfirmContainer {
+.modalContainer {
   position: fixed;
   height: 100%;
   width: 100%;
@@ -59,7 +59,7 @@ mat-checkbox {
   left: 0;
   top: 0;
 
-  .modal {
+  .confirmModal {
     width: 50%;
     height: 20%;
     margin: auto;
@@ -72,5 +72,9 @@ mat-checkbox {
       font-size: 1em;
       padding: 10px 30px;
     }
+  }
+
+  .warning {
+    color: #e22;
   }
 }

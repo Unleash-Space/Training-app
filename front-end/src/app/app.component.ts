@@ -12,6 +12,7 @@ export class AppComponent implements AfterContentInit {
   selectedEvent: any;
   trainings: eventbriteEvent[] = [];
   showConfirm = false;
+  showError: boolean = false;
 
   facilitators = [
     'Hayden Moore',
@@ -28,7 +29,7 @@ export class AppComponent implements AfterContentInit {
 
   async ngAfterContentInit() {
     this.trainings = await this.api.getTodaysEvents();
-    // this.api.signIn();
+    this.api.signIn();
   }
 
   login() {

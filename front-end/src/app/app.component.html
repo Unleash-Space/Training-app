@@ -52,14 +52,16 @@
               <input
                 matInput
                 placeholder="Name"
-                value="{{ attendee.name }}"
+                value="{{ attendee.name.firstName }} {{
+                  attendee.name.lastName
+                }}"
                 pattern="[a-zA-Z ]*"
               />
             </mat-form-field>
           </td>
           <td>
             <mat-form-field appearance="fill">
-              <mat-label *ngIf="name.invalid" class="alert">INVALID</mat-label>
+              <mat-label *ngIf="name?.invalid" class="alert">INVALID</mat-label>
               <input
                 matInput
                 placeholder="UPI"
@@ -72,7 +74,7 @@
           </td>
           <td>
             <mat-form-field appearance="fill">
-              <mat-label *ngIf="name.invalid" class="alert">INVALID</mat-label>
+              <mat-label *ngIf="name?.invalid" class="alert">INVALID</mat-label>
               <input
                 matInput
                 placeholder="ID"
@@ -100,16 +102,26 @@
   </div>
 </div>
 
-<div *ngIf="showConfirm" class="ConfirmContainer" (click)="showConfirm = false">
-  <div class="modal">
+<div *ngIf="showConfirm" class="modalContainer" (click)="showConfirm = false">
+  <div class="confirmModal">
     <h2>Please confirm</h2>
     <ul>
       <li>UPIs and IDs are correct</li>
       <li>The Training is correct</li>
-      <li>You are the facilitator</li>
+      <li [class]="selectedFacilitator ? '' : 'warning'">
+        You are the facilitator
+      </li>
     </ul>
     <button mat-raised-button color="primary" (click)="submitData()">
       Confirm
     </button>
+  </div>
+</div>
+
+<div *ngIf="showError" class="modalContainer" (click)="showError = false">
+  <div class="errorModal">
+    <h2>AN ERROR OCCURRED</h2>
+
+    <button mat-raised-button color="primary">Confirm</button>
   </div>
 </div>
