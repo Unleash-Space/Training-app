@@ -144,9 +144,9 @@ export class ApiService {
         )
         .toPromise();
 
-      return 0;
+      return 200;
     } catch {
-      return 300;
+      return 0;
     }
   }
 
