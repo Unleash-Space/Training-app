@@ -18,62 +18,66 @@ export class ApiService {
     public gapiService: GoogleApiService
   ) {}
 
-  async getTodaysEvents() {
-    const NOW = new Date();
-    const URL = `${this.eventbriteURL}/events/?token=${KEYS.eventbrite}&time_filter=current_future&order_by=start_asc`;
-    const res: eventbriteEvent[] = (await this.baseGet(URL)).events;
-    var events: eventbriteEvent[] = [];
+  async getTodaysEvents(): Promise<any> {
+    try {
+      const NOW = new Date();
+      const URL = `${this.eventbriteURL}/events/?token=${KEYS.eventbrite}&time_filter=current_future&order_by=start_asc`;
+      const res: eventbriteEvent[] = (await this.baseGet(URL)).events;
+      var events: eventbriteEvent[] = [];
 
-    var todayEvents = res.filter((e) => {
-      const dateArray = e.start.local.split('T')[0].split('-');
-      const year = parseInt(dateArray[0]);
-      const month = parseInt(dateArray[1]);
-      const date = parseInt(dateArray[2]);
+      var todayEvents = res.filter((e) => {
+        const dateArray = e.start.local.split('T')[0].split('-');
+        const year = parseInt(dateArray[0]);
+        const month = parseInt(dateArray[1]);
+        const date = parseInt(dateArray[2]);
 
-      if (
-        year == NOW.getFullYear() &&
-        month == NOW.getMonth() + 1 &&
-        date == NOW.getDate()
-      ) {
-        return true;
-      }
-      return false;
-    });
+        if (
+          year == NOW.getFullYear() &&
+          month == NOW.getMonth() + 1 &&
+          date == NOW.getDate()
+        ) {
+          return true;
+        }
+        return false;
+      });
 
-    todayEvents.forEach((e) => {
-      const date = new Date(e.start.local);
+      todayEvents.forEach((e) => {
+        const date = new Date(e.start.local);
 
-      const minutes = date.getMinutes() ? `:${date.getMinutes()}` : '';
+        const minutes = date.getMinutes() ? `:${date.getMinutes()}` : '';
 
-      let time =
-        date.getHours() > 12
-          ? `${date.getHours() - 12}${minutes} PM`
-          : `${date.getHours()}${minutes} AM`;
-      if (date.getHours() === 12) time = `${date.getHours()}${minutes} PM`;
+        let time =
+          date.getHours() > 12
+            ? `${date.getHours() - 12}${minutes} PM`
+            : `${date.getHours()}${minutes} AM`;
+        if (date.getHours() === 12) time = `${date.getHours()}${minutes} PM`;
 
-      const format = {
-        capacity: e.capacity,
-        description: e.description,
-        summary: e.summary,
-        title: e.name.text,
+        const format = {
+          capacity: e.capacity,
+          description: e.description,
+          summary: e.summary,
+          title: e.name.text,
 
-        id: e.id,
-        start: e.start,
-        attendees: e.attendees,
-        date: {
-          date: `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`,
-          time: time,
-        },
-      };
+          id: e.id,
+          start: e.start,
+          attendees: e.attendees,
+          date: {
+            date: `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`,
+            time: time,
+          },
+        };
 
-      events.push(format);
-    });
+        events.push(format);
+      });
 
-    events.forEach(async (e) => {
-      e.attendees = await this.getEventAttendees(e.id);
-    });
+      events.forEach(async (e) => {
+        e.attendees = await this.getEventAttendees(e.id);
+      });
 
-    return events;
+      return { trainings: events, status: 200 };
+    } catch {
+      return { trainings: [], status: 0 };
+    }
   }
 
   async getEventAttendees(id: string) {
@@ -107,39 +111,43 @@ export class ApiService {
     table: string,
     facilitator: string
   ) {
-    console.log(data);
+    try {
+      let body: any[] = [];
 
-    let body: any[] = [];
-
-    data.attendees?.forEach((e) => {
-      if (e.attending) {
-        body.push([
-          data.date.date,
-          e.name?.firstName,
-          e.name?.lastName,
-          e.email,
-          parseInt(e.id),
-          e.upi,
-          facilitator,
-        ]);
-      }
-    });
-
-    console.log(body);
-
-    var API_URL: string = `https://sheets.googleapis.com/v4/spreadsheets/${KEYS.sheetID}/values/'${table}'!E:K:append/?valueInputOption=RAW`;
-
-    var res = await this.http
-      .post(
-        API_URL,
-        { values: body },
-        {
-          headers: new HttpHeaders({
-            Authorization: `Bearer ${this.getToken()}`,
-          }),
+      data.attendees?.forEach((e) => {
+        if (e.attending) {
+          body.push([
+            data.date.date,
+            e.name?.firstName,
+            e.name?.lastName,
+            e.email,
+            parseInt(e.id),
+            e.upi,
+            facilitator,
+          ]);
         }
-      )
-      .toPromise();
+      });
+
+      console.log(body);
+
+      var API_URL: string = `https://sheets.googleapis.com/v4/spreadsheets/${KEYS.sheetID}/values/'${table}'!E:K:append/?valueInputOption=RAW`;
+
+      var res = await this.http
+        .post(
+          API_URL,
+          { values: body },
+          {
+            headers: new HttpHeaders({
+              Authorization: `Bearer ${this.getToken()}`,
+            }),
+          }
+        )
+        .toPromise();
+
+      return 0;
+    } catch {
+      return 300;
+    }
   }
 
   public getToken() {

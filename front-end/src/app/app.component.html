@@ -103,7 +103,7 @@
 </div>
 
 <div *ngIf="showConfirm" class="modalContainer" (click)="showConfirm = false">
-  <div class="confirmModal">
+  <div class="confirmModal modal">
     <h2>Please confirm</h2>
     <ul>
       <li>UPIs and IDs are correct</li>
@@ -119,9 +119,20 @@
 </div>
 
 <div *ngIf="showError" class="modalContainer" (click)="showError = false">
-  <div class="errorModal">
+  <div class="errorModal modal">
     <h2>AN ERROR OCCURRED</h2>
+    <p>Please check the following things</p>
+    <ul>
+      <li>The interwebs is working</li>
+      <li>You have signed in with google</li>
+      <li>ALl the information you entered is correct</li>
+    </ul>
 
-    <button mat-raised-button color="primary">Confirm</button>
+    if you cannot resolve this enter the information into the master list
+    manually
+    <br />
+    <br />
+
+    <button mat-raised-button color="primary">Continue</button>
   </div>
 </div>

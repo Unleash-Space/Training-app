@@ -28,12 +28,14 @@ export class AppComponent implements AfterContentInit {
   constructor(public api: ApiService) {}
 
   async ngAfterContentInit() {
-    this.trainings = await this.api.getTodaysEvents();
     this.api.signIn();
-  }
+    const res = await this.api.getTodaysEvents();
 
-  login() {
-    this.api.signIn();
+    if (res.status === 0) {
+      this.showError = true;
+    } else {
+      this.trainings = res.trainings;
+    }
   }
 
   newAttendee() {
@@ -44,7 +46,7 @@ export class AppComponent implements AfterContentInit {
     });
   }
 
-  submitData() {
+  async submitData() {
     var table = '';
 
     if (this.selectedEvent.title.includes('Router')) table = 'CNC Router';
@@ -56,6 +58,15 @@ export class AppComponent implements AfterContentInit {
     else if (this.selectedEvent.title.includes('Solder'))
       table = 'Soldering Station ';
 
-    this.api.insertData(this.selectedEvent, table, this.selectedFacilitator);
+    var res = await this.api.insertData(
+      this.selectedEvent,
+      table,
+      this.selectedFacilitator
+    );
+
+    if (res != 200) {
+      console.log('ERROR');
+      this.showError = true;
+    }
   }
 }

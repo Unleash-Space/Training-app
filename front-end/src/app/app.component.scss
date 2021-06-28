@@ -33,7 +33,8 @@ h2 {
 .button-row {
   float: right;
 }
-.button-row button {
+
+button {
   margin: 10px;
   font-size: 1em;
   padding: 10px 30px;
@@ -59,19 +60,13 @@ mat-checkbox {
   left: 0;
   top: 0;
 
-  .confirmModal {
+  .modal {
     width: 50%;
-    height: 20%;
+    height: 30%;
     margin: auto;
     margin-top: 25vh;
     background-color: #303030;
-    padding: 100px;
-
-    button {
-      margin: 10px;
-      font-size: 1em;
-      padding: 10px 30px;
-    }
+    padding: 80px;
   }
 
   .warning {
