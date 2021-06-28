@@ -41,7 +41,6 @@ export class ApiService {
     });
 
     todayEvents.forEach((e) => {
-      console.log(e);
       const date = new Date(e.start.local);
 
       const minutes = date.getMinutes() ? `:${date.getMinutes()}` : '';
@@ -84,15 +83,20 @@ export class ApiService {
     var raw = (await this.baseGet(URL)).attendees;
 
     raw.forEach((e: any) => {
+      console.log(e);
+
       attendees.push({
         attending: false,
-        name: e.profile.name,
+
+        name: {
+          firstName: e.profile.first_name,
+          lastName: e.profile.last_name,
+        },
         email: e.profile.email,
         upi: e.answers.find((answer: any) => answer.question === 'UPI').answer,
         id: e.answers.find((answer: any) => answer.question === 'UoA ID')
           .answer,
       });
-      console.log(attendees);
     });
 
     return attendees;
@@ -109,13 +113,21 @@ export class ApiService {
 
     data.attendees?.forEach((e) => {
       if (e.attending) {
-        body.push([data.date.date, parseInt(e.id), facilitator]);
+        body.push([
+          data.date.date,
+          e.name?.firstName,
+          e.name?.lastName,
+          e.email,
+          parseInt(e.id),
+          e.upi,
+          facilitator,
+        ]);
       }
     });
 
     console.log(body);
 
-    var API_URL: string = `https://sheets.googleapis.com/v4/spreadsheets/${KEYS.sheetID}/values/'${table}'!A:A:append/?valueInputOption=RAW`;
+    var API_URL: string = `https://sheets.googleapis.com/v4/spreadsheets/${KEYS.sheetID}/values/'${table}'!E:K:append/?valueInputOption=RAW`;
 
     var res = await this.http
       .post(

@@ -17,7 +17,7 @@ export class eventbriteEvent {
 }
 
 export class attendee {
-  name?: string;
+  name?: { firstName: string; lastName: string };
   id: string = '';
   upi?: string;
   email?: string;
