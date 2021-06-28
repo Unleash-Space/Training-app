@@ -9,17 +9,23 @@
     <mat-label>Select an event</mat-label>
     <mat-select [(ngModel)]="selectedEvent">
       <mat-option *ngFor="let training of trainings" [value]="training">
-        {{ training.summary }}
+        {{ training.date.time }} - {{ training.title }}
       </mat-option>
     </mat-select>
   </mat-form-field>
 
   <mat-form-field class="facilitator-select" appearance="fill" required>
     <mat-label>Select the facilitator</mat-label>
-    <mat-select [(ngModel)]="selectedFacilitator">
+
+    <mat-select
+      [(ngModel)]="selectedFacilitator"
+      [required]="true"
+      #name="ngModel"
+    >
       <mat-option
         *ngFor="let facilitator of facilitators"
         [value]="facilitator"
+        required
       >
         {{ facilitator }}
       </mat-option>
@@ -28,7 +34,7 @@
 
   <div class="attendee-section" *ngIf="selectedEvent">
     <mat-divider></mat-divider>
-    <h2 class="event-title">{{ selectedEvent.summary }}</h2>
+    <h2 class="event-title">{{ selectedEvent.title }}</h2>
 
     <h2 class="section-title">Attendees</h2>
 
@@ -53,21 +59,27 @@
           </td>
           <td>
             <mat-form-field appearance="fill">
+              <mat-label *ngIf="name.invalid" class="alert">INVALID</mat-label>
               <input
                 matInput
                 placeholder="UPI"
-                value="{{ attendee.upi }}"
+                [(ngModel)]="attendee.upi"
                 pattern="^[a-zA-Z]{1,4}\d{3}$"
+                [required]="true"
+                #name="ngModel"
               />
             </mat-form-field>
           </td>
           <td>
             <mat-form-field appearance="fill">
+              <mat-label *ngIf="name.invalid" class="alert">INVALID</mat-label>
               <input
                 matInput
                 placeholder="ID"
-                value="{{ attendee.id }}"
+                [(ngModel)]="attendee.id"
                 pattern="^(\d{7}|\d{9})$"
+                #name="ngModel"
+                [required]="true"
               />
             </mat-form-field>
           </td>
