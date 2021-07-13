@@ -50,13 +50,13 @@ export class AppComponent implements AfterContentInit {
     var table = '';
 
     if (this.selectedEvent.title.includes('Router')) table = 'CNC Router';
-    else if (this.selectedEvent.title.includes('Laser')) table = 'Laser Cutter';
+    else if (this.selectedEvent.title.includes('Laser')) table = 'Laser';
     else if (this.selectedEvent.title.includes('3D')) table = '3D Printer';
-    else if (this.selectedEvent.title.includes('Vinyl')) table = 'Vinyl Cutter';
-    else if (this.selectedEvent.title.includes('Sewing'))
-      table = 'Sewing Machine';
-    else if (this.selectedEvent.title.includes('Solder'))
-      table = 'Soldering Station ';
+    else if (this.selectedEvent.title.includes('Vinyl')) table = 'Vinyl';
+    else if (this.selectedEvent.title.includes('Sewing')) table = 'Sewing';
+    else if (this.selectedEvent.title.includes('Solder')) table = 'Soldering';
+
+    console.log(table, this.selectedEvent, this.selectedFacilitator);
 
     var res = await this.api.insertData(
       this.selectedEvent,
