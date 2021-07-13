@@ -5,13 +5,21 @@
         "**/.hg": true,
         "**/CVS": true,
         "**/.DS_Store": true,
+        "**/.*/": true,
         "**/.vscode": true,
+        "**/*.module.ts": true,
         "**/*.spec.ts": true,
-        "**/dist": false,
+        "**/coverage": true,
+        "**/dist": true,
         "**/e2e": true,
+        "**/keys/": true,
         "**/node_modules": true,
         "**/packag*.json": true,
-        "**/ts*.json": true
+        "**/platforms/": true,
+        "**/plugins/": true,
+        "**/ts*.json": true,
+        "**/typings/": true,
+        "**/www/": true
     },
     "explorerExclude.backup": null
 }
