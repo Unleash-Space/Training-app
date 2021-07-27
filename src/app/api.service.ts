@@ -97,8 +97,9 @@ export class ApiService {
           lastName: e.profile.last_name,
         },
         email: e.profile.email,
-        upi: e.answers.find((answer: any) => answer.question === 'UPI').answer,
-        id: e.answers.find((answer: any) => answer.question === 'UoA ID')
+        upi: e.answers.find((answer: any) => answer.question.includes('UPI'))
+          .answer,
+        id: e.answers.find((answer: any) => answer.question.includes('UoA ID'))
           .answer,
       });
     });
@@ -124,13 +125,14 @@ export class ApiService {
             parseInt(e.id),
             e.upi,
             facilitator,
+            'Training',
           ]);
         }
       });
 
       console.log(body);
 
-      var API_URL: string = `https://sheets.googleapis.com/v4/spreadsheets/${KEYS.sheetID}/values/'${table}'!E:K:append/?valueInputOption=RAW`;
+      var API_URL: string = `https://sheets.googleapis.com/v4/spreadsheets/${KEYS.sheetID}/values/'${table}'!A:F:append/?valueInputOption=RAW`;
 
       var res = await this.http
         .post(

@@ -123,9 +123,11 @@
     <h2>AN ERROR OCCURRED</h2>
     <p>Please check the following things</p>
     <ul>
-      <li>The interwebs is working</li>
       <li>You have signed in with google</li>
-      <li>ALl the information you entered is correct</li>
+      <li class="warning" *ngIf="!anyone_attending">
+        At least one person is attending
+      </li>
+      <li>All the information you entered is correct</li>
     </ul>
 
     if you cannot resolve this enter the information into the master list

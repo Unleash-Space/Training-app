@@ -13,16 +13,29 @@ export class AppComponent implements AfterContentInit {
   trainings: eventbriteEvent[] = [];
   showConfirm = false;
   showError: boolean = false;
+  anyone_attending = false;
 
   facilitators = [
-    'Hayden Moore',
-    'Sean Kelly',
-    'Ariel Dannenbring',
-    'Etienne Naude',
-    'Anne Pan',
-    'Melissa Bather',
-    'Mat Barry',
-    'Caroline Brown',
+    'Hayden',
+    'Melissa',
+    'Mat',
+    'Caroline',
+    'Petr',
+    'Rosa',
+    'Julia',
+    'Daniele',
+    'Andi',
+    'Nova',
+    'Hajar',
+    'Karthik',
+    'Iris',
+    'Hugh',
+    'Blake',
+    'Raymond',
+    'Etienne',
+    'Anne',
+    'Sean',
+    'Ariel',
   ];
 
   constructor(public api: ApiService) {}
@@ -47,6 +60,16 @@ export class AppComponent implements AfterContentInit {
   }
 
   async submitData() {
+    this.anyone_attending = false;
+    this.selectedEvent.attendees.forEach((attendee: any) => {
+      if (attendee.attending) this.anyone_attending = true;
+    });
+
+    if (!this.anyone_attending) {
+      this.showError = true;
+      return;
+    }
+
     var table = '';
 
     if (this.selectedEvent.title.includes('Router')) table = 'CNC Router';
