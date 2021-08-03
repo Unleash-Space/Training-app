@@ -1,5 +1,11 @@
 import { eventbriteEvent, attendee } from './classes';
-import { AfterContentInit, Component } from '@angular/core';
+import {
+  AfterContentInit,
+  Component,
+  ViewChild,
+  Directive,
+  ElementRef,
+} from '@angular/core';
 import { ApiService } from './api.service';
 
 @Component({
@@ -14,6 +20,8 @@ export class AppComponent implements AfterContentInit {
   showConfirm = false;
   showError: boolean = false;
   anyone_attending = false;
+
+  @ViewChild('banner', { static: false }) banner: any;
 
   facilitators = [
     'Hayden',
@@ -89,7 +97,12 @@ export class AppComponent implements AfterContentInit {
       this.selectedFacilitator
     );
 
-    if (res != 200) {
+    if (res === 200) {
+      this.banner.nativeElement.className = 'bannerCont show';
+      setTimeout(() => {
+        this.banner.nativeElement.className = 'bannerCont';
+      }, 1500);
+    } else {
       console.log('ERROR');
       this.showError = true;
     }

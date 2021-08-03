@@ -78,3 +78,25 @@ mat-checkbox {
     color: #e22;
   }
 }
+
+.bannerCont {
+  width: 100%;
+  height: 5%;
+  background-color: rgb(102, 236, 102);
+  display: flex;
+  top: 94px;
+  position: fixed;
+  align-items: center;
+  opacity: 0;
+
+  transition: 0.5s ease;
+
+  div {
+    margin: auto;
+    color: black;
+  }
+}
+
+.bannerCont.show {
+  opacity: 1;
+}
