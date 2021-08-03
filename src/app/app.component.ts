@@ -53,9 +53,11 @@ export class AppComponent implements AfterContentInit {
 
   newAttendee() {
     this.selectedEvent.attendees.push({
-      name: '',
+      name: { firstName: '', lastName: '' },
       upi: '',
       id: '',
+      email: '',
+      attending: false,
     });
   }
 
@@ -79,7 +81,7 @@ export class AppComponent implements AfterContentInit {
     else if (this.selectedEvent.title.includes('Sewing')) table = 'Sewing';
     else if (this.selectedEvent.title.includes('Solder')) table = 'Soldering';
 
-    console.log(table, this.selectedEvent, this.selectedFacilitator);
+    console.log(this.selectedEvent, table, this.selectedFacilitator);
 
     var res = await this.api.insertData(
       this.selectedEvent,

@@ -1,16 +1,21 @@
 .container {
-  width: 80%;
+  width: 85%;
   margin: 0 auto;
 }
 
 .attendee-data table {
-  width: 100%;
-}
-.attendee-data table tr th {
-  text-align: left;
-}
-.attendee-data table tr td mat-form-field {
-  width: calc(100% - 10px);
+  width: 90%;
+  tr {
+    th {
+      text-align: left;
+    }
+
+    td {
+      mat-form-field {
+        width: calc(100% - 10px);
+      }
+    }
+  }
 }
 
 .header {

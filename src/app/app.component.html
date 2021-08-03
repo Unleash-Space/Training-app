@@ -41,7 +41,9 @@
     <div class="attendee-data">
       <table cellspacing="0">
         <tr>
-          <th>Name</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
           <th>UPI</th>
           <th>ID</th>
           <th>Attended</th>
@@ -51,14 +53,35 @@
             <mat-form-field appearance="fill">
               <input
                 matInput
-                placeholder="Name"
-                value="{{ attendee.name.firstName }} {{
-                  attendee.name.lastName
-                }}"
+                placeholder="First Name"
+                [(ngModel)]="attendee.name.firstName"
                 pattern="[a-zA-Z ]*"
               />
             </mat-form-field>
           </td>
+
+          <td>
+            <mat-form-field appearance="fill">
+              <input
+                matInput
+                placeholder="Last Name"
+                [(ngModel)]="attendee.name.lastName"
+                pattern="[a-zA-Z ]*"
+              />
+            </mat-form-field>
+          </td>
+
+          <td>
+            <mat-form-field appearance="fill">
+              <input
+                matInput
+                placeholder="Email"
+                [(ngModel)]="attendee.email"
+                pattern="[a-zA-Z ]*"
+              />
+            </mat-form-field>
+          </td>
+
           <td>
             <mat-form-field appearance="fill">
               <mat-label *ngIf="name?.invalid" class="alert">INVALID</mat-label>
