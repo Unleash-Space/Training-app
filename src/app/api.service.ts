@@ -62,7 +62,9 @@ export class ApiService {
           start: e.start,
           attendees: e.attendees,
           date: {
-            date: `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`,
+            date: `${date.getDate()}/${
+              date.getMonth() + 1
+            }/${date.getFullYear()}`,
             time: time,
           },
         };
@@ -116,6 +118,7 @@ export class ApiService {
       let body: any[] = [];
 
       data.attendees?.forEach((e) => {
+        console.log(e.id);
         if (e.attending) {
           body.push([
             data.date.date,
@@ -147,7 +150,8 @@ export class ApiService {
         .toPromise();
 
       return 200;
-    } catch {
+    } catch (e) {
+      console.log(e);
       return 0;
     }
   }
