@@ -89,21 +89,25 @@ export class ApiService {
     var raw = (await this.baseGet(URL)).attendees;
 
     raw.forEach((e: any) => {
-      console.log(e);
+      try {
+        attendees.push({
+          attending: false,
 
-      attendees.push({
-        attending: false,
-
-        name: {
-          firstName: e.profile.first_name,
-          lastName: e.profile.last_name,
-        },
-        email: e.profile.email,
-        upi: e.answers.find((answer: any) => answer.question.includes('UPI'))
-          .answer,
-        id: e.answers.find((answer: any) => answer.question.includes('UoA ID'))
-          .answer,
-      });
+          name: {
+            firstName: e.profile.first_name,
+            lastName: e.profile.last_name,
+          },
+          email: e.profile.email,
+          upi: e.answers.find((answer: any) =>
+            answer?.question?.includes('UPI')
+          )?.answer,
+          id: e.answers.find((answer: any) =>
+            answer?.question?.includes('UoA ID')
+          )?.answer,
+        });
+      } catch (err) {
+        console.log(err);
+      }
     });
 
     return attendees;
@@ -164,13 +168,11 @@ export class ApiService {
     return sessionStorage.getItem(ApiService.SESSION_STORAGE_KEY);
   }
 
-  public signIn(): void {
-    this.googleAuth.getAuth().subscribe((auth: any) => {
-      auth.signIn().then((res: any) => this.signInSuccessHandler(res));
-    });
+  public async signIn() {
+    return await this.googleAuth.getAuth();
   }
 
-  private signInSuccessHandler(res: any) {
+  public signInSuccessHandler(res: any) {
     this.user = res;
     sessionStorage.setItem(
       ApiService.SESSION_STORAGE_KEY,

@@ -146,7 +146,9 @@
     <h2>AN ERROR OCCURRED</h2>
     <p>Please check the following things</p>
     <ul>
-      <li>You have signed in with google</li>
+      <li class="warning" *ngIf="!authenticated">
+        You have signed in with google
+      </li>
       <li class="warning" *ngIf="!anyone_attending">
         At least one person is attending
       </li>
@@ -165,3 +167,5 @@
 <div class="bannerCont" #banner>
   <div>Success</div>
 </div>
+
+<div class="auth_logo false" *ngIf="!authenticated"><div>x</div></div>

@@ -82,7 +82,7 @@ mat-checkbox {
 .bannerCont {
   width: 100%;
   height: 5%;
-  background-color: rgb(102, 236, 102);
+  background-color: #66ec66;
   display: flex;
   top: 94px;
   position: fixed;
@@ -99,4 +99,29 @@ mat-checkbox {
 
 .bannerCont.show {
   opacity: 1;
+}
+
+.auth_logo {
+  position: fixed;
+  display: flex;
+  top: 12%;
+  right: 2%;
+  width: 50px;
+  height: 50px;
+  background-color: red;
+  border-radius: 200px;
+
+  div {
+    margin: auto;
+    font-size: 2em;
+    color: black;
+  }
+}
+
+.auth_logo.false {
+  background-color: red;
+}
+
+.auth_logo.true {
+  background-color: green;
 }

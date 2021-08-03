@@ -20,6 +20,7 @@ export class AppComponent implements AfterContentInit {
   showConfirm = false;
   showError: boolean = false;
   anyone_attending = false;
+  authenticated = false;
 
   @ViewChild('banner', { static: false }) banner: any;
 
@@ -49,9 +50,15 @@ export class AppComponent implements AfterContentInit {
   constructor(public api: ApiService) {}
 
   async ngAfterContentInit() {
-    this.api.signIn();
+    let auth = (await this.api.signIn()).subscribe((auth: any) => {
+      auth.signIn().then((res: any) => {
+        this.api.signInSuccessHandler(res);
+        console.log(auth);
+        this.authenticated = true;
+      });
+    });
     const res = await this.api.getTodaysEvents();
-
+    console.log(auth);
     if (res.status === 0) {
       this.showError = true;
     } else {
