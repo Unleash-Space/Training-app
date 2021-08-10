@@ -21,27 +21,16 @@ export class ApiService {
   async getTodaysEvents(): Promise<any> {
     try {
       const NOW = new Date();
-      const URL = `${this.eventbriteURL}/events/?token=${KEYS.eventbrite}&time_filter=current_future&order_by=start_asc`;
-      const res: eventbriteEvent[] = (await this.baseGet(URL)).events;
+      const date = `${NOW.getFullYear()}-${
+        NOW.getMonth() + 1
+      }-${NOW.getDate()}`;
+      const URL = `${this.eventbriteURL}/events/?start_date.range_start=${date}&start_date.range_end=${date}&token=${KEYS.eventbrite}`;
+      var res: eventbriteEvent[] = (await this.baseGet(URL)).events;
       var events: eventbriteEvent[] = [];
 
-      var todayEvents = res.filter((e) => {
-        const dateArray = e.start.local.split('T')[0].split('-');
-        const year = parseInt(dateArray[0]);
-        const month = parseInt(dateArray[1]);
-        const date = parseInt(dateArray[2]);
+      console.log(res);
 
-        if (
-          year == NOW.getFullYear() &&
-          month == NOW.getMonth() + 1 &&
-          date == NOW.getDate()
-        ) {
-          return true;
-        }
-        return false;
-      });
-
-      todayEvents.forEach((e) => {
+      res.forEach((e) => {
         const date = new Date(e.start.local);
 
         const minutes = date.getMinutes() ? `:${date.getMinutes()}` : '';
