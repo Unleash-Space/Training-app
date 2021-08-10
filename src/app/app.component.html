@@ -84,26 +84,26 @@
 
           <td>
             <mat-form-field appearance="fill">
-              <mat-label *ngIf="name?.invalid" class="alert">INVALID</mat-label>
+              <mat-label *ngIf="upi?.invalid" class="alert">INVALID</mat-label>
               <input
                 matInput
                 placeholder="UPI"
                 [(ngModel)]="attendee.upi"
                 pattern="^[a-zA-Z]{1,4}\d{3}$"
                 [required]="true"
-                #name="ngModel"
+                #upi="ngModel"
               />
             </mat-form-field>
           </td>
           <td>
             <mat-form-field appearance="fill">
-              <mat-label *ngIf="name?.invalid" class="alert">INVALID</mat-label>
+              <mat-label *ngIf="id?.invalid" class="alert">INVALID</mat-label>
               <input
                 matInput
                 placeholder="ID"
                 [(ngModel)]="attendee.id"
                 pattern="^(\d{7}|\d{9})$"
-                #name="ngModel"
+                #id="ngModel"
                 [required]="true"
               />
             </mat-form-field>
@@ -118,7 +118,7 @@
 
     <div class="button-row">
       <button mat-raised-button (click)="newAttendee()">New attendee</button>
-      <button mat-raised-button color="primary" (click)="showConfirm = true">
+      <button mat-raised-button color="primary" (click)="preCheck()">
         Submit
       </button>
     </div>
@@ -131,9 +131,6 @@
     <ul>
       <li>UPIs and IDs are correct</li>
       <li>The Training is correct</li>
-      <li [class]="selectedFacilitator ? '' : 'warning'">
-        You are the facilitator
-      </li>
     </ul>
     <button mat-raised-button color="primary" (click)="submitData()">
       Confirm
@@ -141,7 +138,7 @@
   </div>
 </div>
 
-<div *ngIf="showError" class="modalContainer" (click)="showError = false">
+<div *ngIf="false" class="modalContainer">
   <div class="errorModal modal">
     <h2>AN ERROR OCCURRED</h2>
     <p>Please check the following things</p>
@@ -168,4 +165,8 @@
   <div>Success</div>
 </div>
 
-<div class="auth_logo false" *ngIf="!authenticated"><div>x</div></div>
+<div class="bannerCont error" #errorBanner>
+  <div #errorText></div>
+</div>
+
+<!-- <div class="auth_logo false" *ngIf="!authenticated"><div>x</div></div> -->

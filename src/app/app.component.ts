@@ -18,11 +18,13 @@ export class AppComponent implements AfterContentInit {
   selectedEvent: any;
   trainings: eventbriteEvent[] = [];
   showConfirm = false;
-  showError: boolean = false;
   anyone_attending = false;
   authenticated = false;
 
   @ViewChild('banner', { static: false }) banner: any;
+  @ViewChild('errorBanner', { static: false }) errorBanner: any;
+  @ViewChild('errorText', { static: false }) errorText: any;
+  @ViewChild('id', { static: false }) ids: any;
 
   facilitators = [
     'Hayden',
@@ -60,7 +62,7 @@ export class AppComponent implements AfterContentInit {
     const res = await this.api.getTodaysEvents();
     console.log(auth);
     if (res.status === 0) {
-      this.showError = true;
+      this.showError("Couldn't get todays events");
     } else {
       this.trainings = res.trainings;
     }
@@ -76,16 +78,29 @@ export class AppComponent implements AfterContentInit {
     });
   }
 
-  async submitData() {
-    this.anyone_attending = false;
+  async preCheck() {
     this.selectedEvent.attendees.forEach((attendee: any) => {
       if (attendee.attending) this.anyone_attending = true;
     });
 
     if (!this.anyone_attending) {
-      this.showError = true;
+      this.showError('No-one Attending');
       return;
     }
+    if (this.selectedFacilitator == '') {
+      this.showError('No Facilitator Selected');
+      return;
+    }
+    if (!this.authenticated) {
+      this.showError('Please Authenticate With Google');
+      return;
+    }
+
+    this.showConfirm = true;
+  }
+
+  async submitData() {
+    this.anyone_attending = false;
 
     var table = '';
 
@@ -110,8 +125,15 @@ export class AppComponent implements AfterContentInit {
         this.banner.nativeElement.className = 'bannerCont';
       }, 1500);
     } else {
-      console.log('ERROR');
-      this.showError = true;
+      this.showError('Something went wrong');
     }
+  }
+
+  async showError(errorMessage: string) {
+    this.errorText.nativeElement.innerText = errorMessage;
+    this.errorBanner.nativeElement.className = 'bannerCont error show';
+    setTimeout(() => {
+      this.errorBanner.nativeElement.className = 'bannerCont error';
+    }, 1500);
   }
 }
