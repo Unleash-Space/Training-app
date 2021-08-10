@@ -115,6 +115,7 @@ export class ApiService {
         if (e.attending) {
           body.push([
             data.date.date,
+            data.date.time,
             e.name?.firstName,
             e.name?.lastName,
             e.email,
