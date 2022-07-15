@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { KEYS } from './keys';
+import KEYS from './keys.json';
 import { attendee, eventbriteEvent } from './classes';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
