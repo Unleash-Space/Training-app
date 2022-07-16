@@ -9,6 +9,7 @@ export class eventbriteEvent {
     utc: '',
   };
   attendees?: attendee[];
+  fetchedAttendees: boolean = false;
   date: { date: string; time: string } = { date: '', time: '' };
   name?: any;
   title: string = '';
@@ -17,9 +18,10 @@ export class eventbriteEvent {
 }
 
 export class attendee {
-  name?: { firstName: string; lastName: string };
+  firstName: string = '';
+  lastName: string = '';
   id: string = '';
-  upi?: string;
-  email?: string;
-  attending?: boolean;
+  upi: string = '';
+  email: string = '';
+  attending: boolean = false;
 }
