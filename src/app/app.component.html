@@ -18,7 +18,13 @@
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field class="facilitator-select" appearance="fill" required>
+    <mat-form-field
+      [class]="
+        'facilitator-select ' + (selectedFacilitator === '' ? 'validate' : '')
+      "
+      appearance="fill"
+      required
+    >
       <mat-label>Select the facilitator</mat-label>
 
       <mat-select
@@ -29,7 +35,6 @@
         <mat-option
           *ngFor="let facilitator of facilitators"
           [value]="facilitator"
-          required
         >
           {{ facilitator }}
         </mat-option>
@@ -54,35 +59,45 @@
           <th>Attended</th>
         </tr>
         <tr *ngFor="let attendee of selectedEvent.attendees">
-          <td>
+          <td class="validate">
             <mat-form-field appearance="fill">
+              <mat-label
+                *ngIf="!validName(attendee.firstName ?? '')"
+                class="alert"
+                >INVALID</mat-label
+              >
               <input
                 matInput
                 placeholder="First Name"
                 [(ngModel)]="attendee.firstName"
-                [required]="true"
               />
             </mat-form-field>
           </td>
 
-          <td>
+          <td class="validate">
             <mat-form-field appearance="fill">
+              <mat-label
+                *ngIf="!validName(attendee.lastName ?? '')"
+                class="alert"
+                >INVALID</mat-label
+              >
               <input
                 matInput
                 placeholder="Last Name"
                 [(ngModel)]="attendee.lastName"
-                [required]="true"
               />
             </mat-form-field>
           </td>
 
-          <td>
+          <td class="validate">
             <mat-form-field appearance="fill">
+              <mat-label *ngIf="!validEmail(attendee.email ?? '')" class="alert"
+                >INVALID</mat-label
+              >
               <input
                 matInput
                 placeholder="Email"
                 [(ngModel)]="attendee.email"
-                [required]="true"
               />
             </mat-form-field>
           </td>
@@ -124,36 +139,13 @@
 <div *ngIf="showConfirm" class="modalContainer" (click)="showConfirm = false">
   <div class="confirmModal modal">
     <h2>Please confirm</h2>
-    <ul>
-      <li>UPIs and IDs are correct</li>
-      <li>The Training is correct</li>
-    </ul>
+    <p>
+      Some of the Data doesn't seem quite right, please confirm if it is
+      correct.
+    </p>
     <button mat-raised-button color="primary" (click)="submitData()">
       Confirm
     </button>
-  </div>
-</div>
-
-<div *ngIf="false" class="modalContainer">
-  <div class="errorModal modal">
-    <h2>AN ERROR OCCURRED</h2>
-    <p>Please check the following things</p>
-    <ul>
-      <li class="warning" *ngIf="!authenticated">
-        You have signed in with google
-      </li>
-      <li class="warning" *ngIf="!anyone_attending">
-        At least one person is attending
-      </li>
-      <li>All the information you entered is correct</li>
-    </ul>
-
-    if you cannot resolve this enter the information into the master list
-    manually
-    <br />
-    <br />
-
-    <button mat-raised-button color="primary">Continue</button>
   </div>
 </div>
 
