@@ -45,3 +45,6 @@ testem.log
 Thumbs.db
 
 keys.ts
+keys.json
+
+.angular/

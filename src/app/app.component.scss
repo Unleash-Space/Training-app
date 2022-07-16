@@ -4,7 +4,7 @@
 }
 
 .attendee-data table {
-  width: 90%;
+  width: 100%;
   tr {
     th {
       text-align: left;
@@ -20,10 +20,10 @@
 
 .header {
   background-color: #303030;
-}
-.header img {
-  height: 50px;
-  margin: 20px;
+  img {
+    height: 50px;
+    margin: 20px;
+  }
 }
 
 h1,
@@ -53,8 +53,13 @@ mat-checkbox {
   }
 }
 
-.event-select {
-  width: 100%;
+.row {
+  display: flex;
+  justify-content: space-between;
+
+  mat-form-field {
+    width: calc(50% - 10px);
+  }
 }
 
 .modalContainer {
@@ -75,7 +80,7 @@ mat-checkbox {
   }
 
   .warning {
-    color: #e22;
+    color: #ff5353;
     font-size: 2em;
   }
 }
@@ -96,37 +101,37 @@ mat-checkbox {
     margin: auto;
     color: black;
   }
-}
 
-.bannerCont.error {
-  background-color: #e22;
-}
+  &.error {
+    background-color: #ff5353;
+  }
 
-.bannerCont.show {
-  opacity: 1;
+  &.show {
+    opacity: 1;
+  }
 }
 
 .auth_logo {
   position: fixed;
   display: flex;
-  top: 12%;
-  right: 2%;
-  width: 50px;
+  top: 0%;
+  right: 0%;
+  width: 200px;
   height: 50px;
-  background-color: red;
-  border-radius: 200px;
+  background-color: #ff5353;
+  border-radius: 0 0 0 20px;
 
   div {
     margin: auto;
-    font-size: 2em;
-    color: black;
+    font-size: 1.5em;
+    color: white;
   }
 }
 
-.auth_logo.false {
-  background-color: red;
+th {
+  padding-bottom: 15px;
 }
 
-.auth_logo.true {
-  background-color: green;
+.validate ::ng-deep .mat-form-field-label {
+  color: #ff5353 !important;
 }

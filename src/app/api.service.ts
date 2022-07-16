@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { KEYS } from './keys';
+import KEYS from './keys.json';
 import { attendee, eventbriteEvent } from './classes';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { GoogleApiService, GoogleAuthService } from 'ng-gapi';
 @Injectable({
@@ -13,7 +12,6 @@ export class ApiService {
   private user: any;
 
   constructor(
-    public http: HttpClient,
     private googleAuth: GoogleAuthService,
     public gapiService: GoogleApiService
   ) {}
@@ -21,17 +19,22 @@ export class ApiService {
   async getTodaysEvents(): Promise<any> {
     try {
       const NOW = new Date();
-      const date = `${NOW.getFullYear()}-${
+      const startDate = `${NOW.getFullYear()}-${
         NOW.getMonth() + 1
       }-${NOW.getDate()}`;
-      const URL = `${this.eventbriteURL}/events/?start_date.range_start=${date}&start_date.range_end=${date}&token=${KEYS.eventbrite}`;
-      var res: eventbriteEvent[] = (await this.baseGet(URL)).events;
+
+      const dateEnd = `${NOW.getFullYear()}-${NOW.getMonth() + 1}-${
+        NOW.getDate() + 7
+      }`;
+
+      const URL = `${this.eventbriteURL}/events/?start_date.range_start=${startDate}&start_date.range_end=${dateEnd}&token=${KEYS.eventbrite}`;
+
+      const res: eventbriteEvent[] = (await (await fetch(URL)).json()).events;
+
       var events: eventbriteEvent[] = [];
 
-      console.log(res);
-
-      res.forEach((e) => {
-        const date = new Date(e.start.local);
+      res.forEach((event) => {
+        const date = new Date(event.start.local);
 
         const minutes = date.getMinutes() ? `:${date.getMinutes()}` : '';
 
@@ -41,15 +44,16 @@ export class ApiService {
             : `${date.getHours()}${minutes} AM`;
         if (date.getHours() === 12) time = `${date.getHours()}${minutes} PM`;
 
-        const format = {
-          capacity: e.capacity,
-          description: e.description,
-          summary: e.summary,
-          title: e.name.text,
+        const format: eventbriteEvent = {
+          capacity: event.capacity,
+          description: event.description,
+          summary: event.summary,
+          title: event.name.text,
 
-          id: e.id,
-          start: e.start,
-          attendees: e.attendees,
+          id: event.id,
+          start: event.start,
+          attendees: [],
+          fetchedAttendees: false,
           date: {
             date: `${date.getDate()}/${
               date.getMonth() + 1
@@ -61,9 +65,9 @@ export class ApiService {
         events.push(format);
       });
 
-      events.forEach(async (e) => {
-        e.attendees = await this.getEventAttendees(e.id);
-      });
+      // events.forEach(async (e) => {
+      //   e.attendees = await this.getEventAttendees(e.id);
+      // });
 
       return { trainings: events, status: 200 };
     } catch {
@@ -75,31 +79,49 @@ export class ApiService {
     var attendees: attendee[] = [];
     const URL = `https://www.eventbriteapi.com/v3/events/${id}/attendees/?token=${KEYS.eventbrite}`;
 
-    var raw = (await this.baseGet(URL)).attendees;
+    const raw = (await (await fetch(URL, { method: 'GET' })).json()).attendees;
 
-    raw.forEach((e: any) => {
+    raw.forEach((attendee: any) => {
       try {
         attendees.push({
           attending: false,
 
-          name: {
-            firstName: e.profile.first_name,
-            lastName: e.profile.last_name,
-          },
-          email: e.profile.email,
-          upi: e.answers.find((answer: any) =>
-            answer?.question?.includes('UPI')
-          )?.answer,
-          id: e.answers.find((answer: any) =>
-            answer?.question?.includes('UoA ID')
-          )?.answer,
+          firstName: attendee.profile.first_name,
+          lastName: attendee.profile.last_name,
+          email: attendee.profile.email,
+          upi: this.getUpi(attendee),
+          id: this.getId(attendee),
         });
-      } catch (err) {
-        console.log(err);
+      } catch (error) {
+        console.log(error);
       }
     });
 
     return attendees;
+  }
+
+  // Prevents crashing with error handling
+  public getId(attendee: any): string {
+    try {
+      return (
+        attendee.answers.find((answer: any) => answer.question.includes('ID'))
+          .answer ?? ''
+      );
+    } catch {
+      return '';
+    }
+  }
+
+  // Prevents crashing with error handling
+  public getUpi(attendee: any): string {
+    try {
+      return (
+        attendee.answers.find((answer: any) => answer.question.includes('UPI'))
+          .answer ?? ''
+      );
+    } catch {
+      return '';
+    }
   }
 
   public async insertData(
@@ -111,13 +133,12 @@ export class ApiService {
       let body: any[] = [];
 
       data.attendees?.forEach((e) => {
-        console.log(e.id);
         if (e.attending) {
           body.push([
             data.date.date,
             data.date.time,
-            e.name?.firstName,
-            e.name?.lastName,
+            e.firstName,
+            e.lastName,
             e.email,
             parseInt(e.id),
             e.upi,
@@ -127,25 +148,22 @@ export class ApiService {
         }
       });
 
-      console.log(body);
-
       var API_URL: string = `https://sheets.googleapis.com/v4/spreadsheets/${KEYS.sheetID}/values/'${table}'!A:F:append/?valueInputOption=RAW`;
 
-      var res = await this.http
-        .post(
-          API_URL,
-          { values: body },
-          {
-            headers: new HttpHeaders({
-              Authorization: `Bearer ${this.getToken()}`,
-            }),
-          }
-        )
-        .toPromise();
+      var res = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${this.getToken()}`,
+        },
+        body: JSON.stringify({
+          values: body,
+        }),
+      });
 
-      return 200;
-    } catch (e) {
-      console.log(e);
+      return res.status;
+    } catch (error) {
+      console.log(error);
       return 0;
     }
   }
@@ -170,9 +188,7 @@ export class ApiService {
     );
   }
 
-  public async baseGet(url: string) {
-    var res: any = await this.http.get(url).toPromise();
-
-    return res;
+  public updateAccessToken(user: gapi.auth2.AuthResponse) {
+    sessionStorage.setItem(ApiService.SESSION_STORAGE_KEY, user.access_token);
   }
 }

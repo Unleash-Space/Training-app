@@ -1,4 +1,4 @@
-import { KEYS } from './keys';
+import KEYS from './keys.json';
 import { MaterialModule } from './materials/materials.module';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';

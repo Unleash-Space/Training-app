@@ -5,32 +5,37 @@
 <div class="container">
   <h1>Unleash Space event attendance</h1>
 
-  <mat-form-field class="event-select" appearance="fill">
-    <mat-label>Select an event</mat-label>
-    <mat-select [(ngModel)]="selectedEvent">
-      <mat-option *ngFor="let training of trainings" [value]="training">
-        {{ training.date.time }} - {{ training.title }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-
-  <mat-form-field class="facilitator-select" appearance="fill" required>
-    <mat-label>Select the facilitator</mat-label>
-
-    <mat-select
-      [(ngModel)]="selectedFacilitator"
-      [required]="true"
-      #name="ngModel"
-    >
-      <mat-option
-        *ngFor="let facilitator of facilitators"
-        [value]="facilitator"
-        required
+  <div class="row">
+    <mat-form-field class="event-select" appearance="fill">
+      <mat-label>Select an event</mat-label>
+      <mat-select
+        [(ngModel)]="selectedEvent"
+        (selectionChange)="getEventAttendees(selectedEvent)"
       >
-        {{ facilitator }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+        <mat-option *ngFor="let training of trainings" [value]="training">
+          {{ training.date.time }} - {{ training.title }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="facilitator-select" appearance="fill" required>
+      <mat-label>Select the facilitator</mat-label>
+
+      <mat-select
+        [(ngModel)]="selectedFacilitator"
+        [required]="true"
+        #name="ngModel"
+      >
+        <mat-option
+          *ngFor="let facilitator of facilitators"
+          [value]="facilitator"
+          required
+        >
+          {{ facilitator }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
 
   <div class="attendee-section" *ngIf="selectedEvent">
     <mat-divider></mat-divider>
@@ -54,8 +59,8 @@
               <input
                 matInput
                 placeholder="First Name"
-                [(ngModel)]="attendee.name.firstName"
-                pattern="[a-zA-Z ]*"
+                [(ngModel)]="attendee.firstName"
+                [required]="true"
               />
             </mat-form-field>
           </td>
@@ -65,8 +70,8 @@
               <input
                 matInput
                 placeholder="Last Name"
-                [(ngModel)]="attendee.name.lastName"
-                pattern="[a-zA-Z ]*"
+                [(ngModel)]="attendee.lastName"
+                [required]="true"
               />
             </mat-form-field>
           </td>
@@ -77,35 +82,26 @@
                 matInput
                 placeholder="Email"
                 [(ngModel)]="attendee.email"
-                pattern="[a-zA-Z ]*"
+                [required]="true"
               />
             </mat-form-field>
           </td>
 
-          <td>
+          <td class="validate">
             <mat-form-field appearance="fill">
-              <mat-label *ngIf="upi?.invalid" class="alert">INVALID</mat-label>
-              <input
-                matInput
-                placeholder="UPI"
-                [(ngModel)]="attendee.upi"
-                pattern="^[a-zA-Z]{1,4}\d{3}$"
-                [required]="true"
-                #upi="ngModel"
-              />
+              <mat-label *ngIf="!validUpi(attendee.upi ?? '')" class="alert"
+                >INVALID</mat-label
+              >
+              <input matInput placeholder="UPI" [(ngModel)]="attendee.upi" />
             </mat-form-field>
           </td>
-          <td>
+
+          <td class="validate">
             <mat-form-field appearance="fill">
-              <mat-label *ngIf="id?.invalid" class="alert">INVALID</mat-label>
-              <input
-                matInput
-                placeholder="ID"
-                [(ngModel)]="attendee.id"
-                pattern="^(\d{7}|\d{9})$"
-                #id="ngModel"
-                [required]="true"
-              />
+              <mat-label *ngIf="!validId(attendee.id ?? '')" class="alert"
+                >INVALID</mat-label
+              >
+              <input matInput placeholder="ID" [(ngModel)]="attendee.id" />
             </mat-form-field>
           </td>
 
@@ -169,4 +165,6 @@
   <div #errorText></div>
 </div>
 
-<!-- <div class="auth_logo false" *ngIf="!authenticated"><div>x</div></div> -->
+<div class="auth_logo false" *ngIf="!authenticated">
+  <div>Please Log in</div>
+</div>

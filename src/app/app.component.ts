@@ -1,11 +1,5 @@
 import { eventbriteEvent, attendee } from './classes';
-import {
-  AfterContentInit,
-  Component,
-  ViewChild,
-  Directive,
-  ElementRef,
-} from '@angular/core';
+import { AfterContentInit, Component, ViewChild } from '@angular/core';
 import { ApiService } from './api.service';
 
 @Component({
@@ -21,15 +15,12 @@ export class AppComponent implements AfterContentInit {
   anyone_attending = false;
   authenticated = false;
 
-  @ViewChild('banner', { static: false }) banner: any;
-  @ViewChild('errorBanner', { static: false }) errorBanner: any;
-  @ViewChild('errorText', { static: false }) errorText: any;
-  @ViewChild('id', { static: false }) ids: any;
+  @ViewChild('banner') banner: any;
+  @ViewChild('errorBanner') errorBanner: any;
+  @ViewChild('errorText') errorText: any;
 
   facilitators = [
     'Hayden',
-    'Melissa',
-    'Mat',
     'Caroline',
     'Petr',
     'Rosa',
@@ -46,39 +37,66 @@ export class AppComponent implements AfterContentInit {
     'Etienne',
     'Anne',
     'Sean',
-    'Ariel',
   ];
 
   constructor(public api: ApiService) {}
 
   async ngAfterContentInit() {
-    let auth = (await this.api.signIn()).subscribe((auth: any) => {
+    (await this.api.signIn()).subscribe((auth) => {
+      if (auth.isSignedIn.get() === true) {
+        this.authenticated = true;
+
+        if (auth.currentUser.get().getId() !== '102985056909257225252') {
+          this.showError('Please Sign in with the Unleash Account');
+          auth.signIn().then((res: any) => {
+            this.api.signInSuccessHandler(res);
+            this.authenticated = true;
+          });
+          return;
+        }
+
+        auth.currentUser
+          .get()
+          .reloadAuthResponse()
+          .then((user) => {
+            this.api.updateAccessToken(user);
+          });
+        return;
+      }
+
       auth.signIn().then((res: any) => {
         this.api.signInSuccessHandler(res);
-        console.log(auth);
         this.authenticated = true;
       });
     });
     const res = await this.api.getTodaysEvents();
-    console.log(auth);
-    if (res.status === 0) {
-      this.showError("Couldn't get todays events");
-    } else {
-      this.trainings = res.trainings;
-    }
+
+    this.trainings = res.trainings;
   }
 
   newAttendee() {
     this.selectedEvent.attendees.push({
-      name: { firstName: '', lastName: '' },
+      firstName: '',
+      lastName: '',
       upi: '',
       id: '',
       email: '',
-      attending: false,
+      attending: true,
     });
   }
 
+  async getEventAttendees(event: eventbriteEvent) {
+    // already have attendees?
+    if (event.fetchedAttendees) {
+      return;
+    }
+
+    event.fetchedAttendees = true;
+    event.attendees = await this.api.getEventAttendees(event.id);
+  }
+
   async preCheck() {
+    this.anyone_attending = false;
     this.selectedEvent.attendees.forEach((attendee: any) => {
       if (attendee.attending) this.anyone_attending = true;
     });
@@ -96,7 +114,7 @@ export class AppComponent implements AfterContentInit {
       return;
     }
 
-    this.showConfirm = true;
+    this.submitData();
   }
 
   async submitData() {
@@ -110,8 +128,11 @@ export class AppComponent implements AfterContentInit {
     else if (this.selectedEvent.title.includes('Vinyl')) table = 'Vinyl';
     else if (this.selectedEvent.title.includes('Sewing')) table = 'Sewing';
     else if (this.selectedEvent.title.includes('Solder')) table = 'Soldering';
-
-    console.log(this.selectedEvent, table, this.selectedFacilitator);
+    else if (this.selectedEvent.title.includes('5G')) table = '5G';
+    else if (this.selectedEvent.title.includes('Internet of Things'))
+      table = 'IoT';
+    else if (this.selectedEvent.title.includes('Virtual Reality'))
+      table = 'Virtual Reality';
 
     var res = await this.api.insertData(
       this.selectedEvent,
@@ -135,5 +156,16 @@ export class AppComponent implements AfterContentInit {
     setTimeout(() => {
       this.errorBanner.nativeElement.className = 'bannerCont error';
     }, 1500);
+  }
+
+  validId(id: string) {
+    const regExp = /^(\d{7}|\d{9})$/;
+
+    return id.match(regExp) !== null;
+  }
+
+  validUpi(upi: string) {
+    const regExp = /^[a-zA-Z]{1,4}\d{3}$/;
+    return upi.match(regExp) !== null;
   }
 }
