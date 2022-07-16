@@ -12,7 +12,6 @@ export class AppComponent implements AfterContentInit {
   selectedEvent: any;
   trainings: eventbriteEvent[] = [];
   showConfirm = false;
-  anyone_attending = false;
   authenticated = false;
 
   @ViewChild('banner') banner: any;
@@ -96,12 +95,21 @@ export class AppComponent implements AfterContentInit {
   }
 
   async preCheck() {
-    this.anyone_attending = false;
+    // validate data
+    let valid = true;
+    let anyone_attending = false;
+
     this.selectedEvent.attendees.forEach((attendee: any) => {
-      if (attendee.attending) this.anyone_attending = true;
+      if (!attendee.attending) return;
+      if (attendee.attending) anyone_attending = true;
+      if (!this.validId(attendee.id)) valid = false;
+      if (!this.validUpi(attendee.upi)) valid = false;
+      if (!this.validEmail(attendee.email)) valid = false;
+      if (!this.validName(attendee.firstName)) valid = false;
+      if (!this.validName(attendee.lastName)) valid = false;
     });
 
-    if (!this.anyone_attending) {
+    if (!anyone_attending) {
       this.showError('No-one Attending');
       return;
     }
@@ -114,16 +122,20 @@ export class AppComponent implements AfterContentInit {
       return;
     }
 
-    this.submitData();
+    if (valid) {
+      this.submitData();
+    } else {
+      this.showConfirm = true;
+    }
   }
 
   async submitData() {
-    this.anyone_attending = false;
-
     var table = '';
 
     if (this.selectedEvent.title.includes('Router')) table = 'CNC Router';
     else if (this.selectedEvent.title.includes('Laser')) table = 'Laser';
+    else if (this.selectedEvent.title.includes('Curricular 3D'))
+      table = '3D Printer - Curricular';
     else if (this.selectedEvent.title.includes('3D')) table = '3D Printer';
     else if (this.selectedEvent.title.includes('Vinyl')) table = 'Vinyl';
     else if (this.selectedEvent.title.includes('Sewing')) table = 'Sewing';
@@ -158,14 +170,24 @@ export class AppComponent implements AfterContentInit {
     }, 1500);
   }
 
-  validId(id: string) {
+  public validId(id: string) {
     const regExp = /^(\d{7}|\d{9})$/;
 
     return id.match(regExp) !== null;
   }
 
-  validUpi(upi: string) {
+  public validUpi(upi: string) {
     const regExp = /^[a-zA-Z]{1,4}\d{3}$/;
     return upi.match(regExp) !== null;
+  }
+
+  public validEmail(email: string) {
+    const regExp = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    return email.match(regExp) !== null;
+  }
+
+  public validName(name: string) {
+    const regExp = /..+/;
+    return name.match(regExp) !== null;
   }
 }

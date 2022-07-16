@@ -69,14 +69,23 @@ mat-checkbox {
   background-color: #2229;
   left: 0;
   top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   .modal {
-    width: 50%;
-    height: 30%;
-    margin: auto;
-    margin-top: 25vh;
-    background-color: #303030;
+    width: 20%;
+    background-color: #353535;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     padding: 80px;
+
+    p {
+      color: #ff5353;
+    }
   }
 
   .warning {
