@@ -24,7 +24,7 @@ export class ApiService {
       }-${NOW.getDate()}`;
 
       const dateEnd = `${NOW.getFullYear()}-${NOW.getMonth() + 1}-${
-        NOW.getDate() + 7
+        NOW.getDate() 
       }`;
 
       const URL = `${this.eventbriteURL}/events/?start_date.range_start=${startDate}&start_date.range_end=${dateEnd}&token=${KEYS.eventbrite}`;
