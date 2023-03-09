@@ -151,6 +151,7 @@ export class AppComponent implements AfterContentInit {
     else if (this.selectedEvent.title.includes('Sewing')) table = 'Sewing';
     else if (this.selectedEvent.title.includes('Solder')) table = 'Soldering';
     else if (this.selectedEvent.title.includes('5G')) table = '5G';
+    else if (this.selectedEvent.title.includes('Artificial Intelligence')) table = 'AI';
     else if (this.selectedEvent.title.includes('Internet of Things'))
       table = 'IoT';
     else if (this.selectedEvent.title.includes('Virtual Reality'))
