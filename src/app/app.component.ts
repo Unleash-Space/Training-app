@@ -19,7 +19,7 @@ export class AppComponent implements AfterContentInit {
   @ViewChild('errorText') errorText: any;
 
   facilitators = [
-    'Nathan',
+    'Connor',
     'Nate',
     'Deiza',
     'Shnaia',
