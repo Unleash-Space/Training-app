@@ -1,6 +1,7 @@
 import { eventbriteEvent, attendee } from '../classes';
 import { AfterContentInit, Component, ViewChild } from '@angular/core';
 import { ApiService } from '../api.service';
+import facilitatorList from './../CTs.json';
 
 @Component({
   selector: 'app-trainings',
@@ -13,30 +14,11 @@ export class TrainingsComponent implements AfterContentInit {
   trainings: eventbriteEvent[] = [];
   showConfirm = false;
   authenticated = false;
+  facilitators = facilitatorList;
 
   @ViewChild('banner') banner: any;
   @ViewChild('errorBanner') errorBanner: any;
   @ViewChild('errorText') errorText: any;
-
-  facilitators = [
-    'Connor',
-    'Nate',
-    'Deiza',
-    'Shnaia',
-    'Hayden',
-    'Caroline',
-    'Petr',
-    'Julia',
-    'Andi',
-    'Nova',
-    'Karthicc',
-    'Iris',
-    'Hugh',
-    'Raymond',
-    'Etienne',
-    'Anne',
-    'Sean',
-  ];
 
   constructor(public api: ApiService) {}
 

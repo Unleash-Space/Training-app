@@ -23,9 +23,9 @@ export class ApiService {
         NOW.getMonth() + 1
       }-${NOW.getDate()}`;
 
-      const dateEnd = `${NOW.getFullYear()}-${NOW.getMonth() + 1}-${
-        NOW.getDate() 
-      }`;
+      const dateEnd = `${NOW.getFullYear()}-${
+        NOW.getMonth() + 1
+      }-${NOW.getDate()}`;
 
       const URL = `${this.eventbriteURL}/events/?start_date.range_start=${startDate}&start_date.range_end=${dateEnd}&token=${KEYS.eventbrite}`;
 
@@ -144,6 +144,55 @@ export class ApiService {
             e.upi,
             facilitator,
             'Training',
+          ]);
+        }
+      });
+
+      var API_URL: string = `https://sheets.googleapis.com/v4/spreadsheets/${KEYS.sheetID}/values/'${table}'!A:F:append/?valueInputOption=RAW`;
+
+      var res = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${this.getToken()}`,
+        },
+        body: JSON.stringify({
+          values: body,
+        }),
+      });
+
+      return res.status;
+    } catch (error) {
+      console.log(error);
+      return 0;
+    }
+  }
+
+  public async insertCertificationData(
+    attendees: attendee[],
+    table: string,
+    facilitator: string
+  ) {
+    try {
+      let body: any[] = [];
+      const date = new Date();
+
+      attendees?.forEach((e) => {
+        if (e.attending) {
+          body.push([
+            date.getDate() +
+              '/' +
+              (date.getMonth() + 1) +
+              '/' +
+              date.getFullYear(),
+            date.getTime(),
+            e.firstName,
+            e.lastName,
+            e.email,
+            parseInt(e.id),
+            e.upi,
+            facilitator,
+            'Certification',
           ]);
         }
       });

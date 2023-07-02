@@ -7,5 +7,5 @@ import { Tab } from './classes';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  tab: Tab = 'Training';
+  tab: Tab = 'Certification';
 }
