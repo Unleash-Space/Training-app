@@ -27,3 +27,17 @@ export class attendee {
 }
 
 export type Tab = 'Training' | 'Lookup' | 'Certification';
+
+export type State = {
+  tab: Tab;
+  authenticated: boolean;
+  trainings: eventbriteEvent[];
+  selectedFacilitator: string;
+  banner: Banner;
+};
+
+export type Banner = {
+  open: boolean;
+  text?: string;
+  type?: 'error' | 'success' | 'info' | 'warning';
+};

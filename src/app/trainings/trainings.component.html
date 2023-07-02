@@ -8,7 +8,7 @@
         [(ngModel)]="selectedEvent"
         (selectionChange)="getEventAttendees(selectedEvent)"
       >
-        <mat-option *ngFor="let training of trainings" [value]="training">
+        <mat-option *ngFor="let training of state.trainings" [value]="training">
           {{ training.date.time }} - {{ training.title }}
         </mat-option>
       </mat-select>
@@ -16,7 +16,8 @@
 
     <mat-form-field
       [class]="
-        'facilitator-select ' + (selectedFacilitator === '' ? 'validate' : '')
+        'facilitator-select ' +
+        (state.selectedFacilitator === '' ? 'validate' : '')
       "
       appearance="fill"
       required
@@ -24,7 +25,7 @@
       <mat-label>Select the facilitator</mat-label>
 
       <mat-select
-        [(ngModel)]="selectedFacilitator"
+        [(ngModel)]="state.selectedFacilitator"
         [required]="true"
         #name="ngModel"
       >
@@ -143,16 +144,4 @@
       Confirm
     </button>
   </div>
-</div>
-
-<div class="bannerCont" #banner>
-  <div>Success</div>
-</div>
-
-<div class="bannerCont error" #errorBanner>
-  <div #errorText></div>
-</div>
-
-<div class="auth_logo false" *ngIf="!authenticated">
-  <div>Please Log in</div>
 </div>

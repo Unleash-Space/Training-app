@@ -1,8 +1,16 @@
-import { eventbriteEvent, attendee } from '../classes';
-import { AfterContentInit, Component, ViewChild } from '@angular/core';
+import { eventbriteEvent, attendee, State } from '../classes';
 import { ApiService } from '../api.service';
 import facilitatorList from './../CTs.json';
 import trainingList from './../trainings.json';
+
+import {
+  AfterContentInit,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 
 @Component({
   selector: 'app-certification',
@@ -18,9 +26,8 @@ export class CertificationComponent implements AfterContentInit {
   attendees: attendee[] = [];
   selectedEvent!: eventbriteEvent;
 
-  @ViewChild('banner') banner: any;
-  @ViewChild('errorBanner') errorBanner: any;
-  @ViewChild('errorText') errorText: any;
+  @Input() state!: State;
+  @Output() stateChange = new EventEmitter<State>();
 
   constructor(public api: ApiService) {}
 
@@ -137,9 +144,11 @@ export class CertificationComponent implements AfterContentInit {
     );
 
     if (res === 200) {
-      this.banner.nativeElement.className = 'bannerCont show';
+      this.state.banner.text = 'Data Submitted Successfully';
+      this.state.banner.type = 'success';
+      this.state.banner.open = true;
       setTimeout(() => {
-        this.banner.nativeElement.className = 'bannerCont';
+        this.state.banner.open = false;
       }, 1500);
     } else {
       this.showError('Something went wrong');
@@ -147,10 +156,11 @@ export class CertificationComponent implements AfterContentInit {
   }
 
   async showError(errorMessage: string) {
-    this.errorText.nativeElement.innerText = errorMessage;
-    this.errorBanner.nativeElement.className = 'bannerCont error show';
+    this.state.banner.text = errorMessage;
+    this.state.banner.type = 'error';
+    this.state.banner.open = true;
     setTimeout(() => {
-      this.errorBanner.nativeElement.className = 'bannerCont error';
+      this.state.banner.open = false;
     }, 1500);
   }
 

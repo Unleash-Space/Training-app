@@ -1,5 +1,4 @@
 import {
-  AfterContentInit,
   Component,
   EventEmitter,
   Input,
@@ -9,15 +8,11 @@ import {
 import { State } from '../classes';
 
 @Component({
-  selector: 'app-lookup',
-  templateUrl: './lookup.component.html',
-  styleUrls: ['./lookup.component.scss'],
+  selector: 'app-banner',
+  templateUrl: './banner.component.html',
+  styleUrls: ['./banner.component.scss'],
 })
-export class LookupComponent {
+export class BannerComponent {
   @Input() state!: State;
   @Output() stateChange = new EventEmitter<State>();
-
-  constructor() {}
-
-  ngOnInit(): void {}
 }

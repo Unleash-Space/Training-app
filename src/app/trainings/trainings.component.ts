@@ -1,5 +1,11 @@
-import { eventbriteEvent, attendee } from '../classes';
-import { AfterContentInit, Component, ViewChild } from '@angular/core';
+import { eventbriteEvent, attendee, State } from '../classes';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { ApiService } from '../api.service';
 import facilitatorList from './../CTs.json';
 
@@ -8,52 +14,15 @@ import facilitatorList from './../CTs.json';
   templateUrl: './trainings.component.html',
   styleUrls: ['./trainings.component.scss'],
 })
-export class TrainingsComponent implements AfterContentInit {
-  selectedFacilitator: string = '';
+export class TrainingsComponent {
   selectedEvent: any;
-  trainings: eventbriteEvent[] = [];
   showConfirm = false;
-  authenticated = false;
   facilitators = facilitatorList;
 
-  @ViewChild('banner') banner: any;
-  @ViewChild('errorBanner') errorBanner: any;
-  @ViewChild('errorText') errorText: any;
+  @Input() state!: State;
+  @Output() stateChange = new EventEmitter<State>();
 
   constructor(public api: ApiService) {}
-
-  async ngAfterContentInit() {
-    (await this.api.signIn()).subscribe((auth) => {
-      if (auth.isSignedIn.get() === true) {
-        this.authenticated = true;
-
-        if (auth.currentUser.get().getId() !== '102985056909257225252') {
-          this.showError('Please Sign in with the Unleash Account');
-          auth.signIn().then((res: any) => {
-            this.api.signInSuccessHandler(res);
-            this.authenticated = true;
-          });
-          return;
-        }
-
-        auth.currentUser
-          .get()
-          .reloadAuthResponse()
-          .then((user) => {
-            this.api.updateAccessToken(user);
-          });
-        return;
-      }
-
-      auth.signIn().then((res: any) => {
-        this.api.signInSuccessHandler(res);
-        this.authenticated = true;
-      });
-    });
-    const res = await this.api.getTodaysEvents();
-
-    this.trainings = res.trainings;
-  }
 
   newAttendee() {
     this.selectedEvent.attendees.push({
@@ -97,11 +66,11 @@ export class TrainingsComponent implements AfterContentInit {
       this.showError('No-one Attending');
       return;
     }
-    if (this.selectedFacilitator == '') {
+    if (this.state.selectedFacilitator == '') {
       this.showError('No Facilitator Selected');
       return;
     }
-    if (!this.authenticated) {
+    if (!this.state.authenticated) {
       this.showError('Please Authenticate With Google');
       return;
     }
@@ -143,13 +112,15 @@ export class TrainingsComponent implements AfterContentInit {
     var res = await this.api.insertData(
       this.selectedEvent,
       table,
-      this.selectedFacilitator
+      this.state.selectedFacilitator
     );
 
     if (res === 200) {
-      this.banner.nativeElement.className = 'bannerCont show';
+      this.state.banner.text = 'Data Submitted Successfully';
+      this.state.banner.type = 'success';
+      this.state.banner.open = true;
       setTimeout(() => {
-        this.banner.nativeElement.className = 'bannerCont';
+        this.state.banner.open = false;
       }, 1500);
     } else {
       this.showError('Something went wrong');
@@ -157,10 +128,11 @@ export class TrainingsComponent implements AfterContentInit {
   }
 
   async showError(errorMessage: string) {
-    this.errorText.nativeElement.innerText = errorMessage;
-    this.errorBanner.nativeElement.className = 'bannerCont error show';
+    this.state.banner.text = errorMessage;
+    this.state.banner.type = 'error';
+    this.state.banner.open = true;
     setTimeout(() => {
-      this.errorBanner.nativeElement.className = 'bannerCont error';
+      this.state.banner.open = false;
     }, 1500);
   }
 

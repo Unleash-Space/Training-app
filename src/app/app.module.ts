@@ -9,6 +9,7 @@ import { HeaderComponent } from './header/header.component';
 import { TrainingsComponent } from './trainings/trainings.component';
 import { CertificationComponent } from './certification/certification.component';
 import { LookupComponent } from './lookup/lookup.component';
+import { BannerComponent } from './banner/banner.component';
 
 let gapiClientConfig: NgGapiClientConfig = {
   client_id: KEYS.clientID,
@@ -23,7 +24,7 @@ let gapiClientConfig: NgGapiClientConfig = {
 };
 
 @NgModule({
-  declarations: [AppComponent, HeaderComponent, TrainingsComponent, CertificationComponent, LookupComponent],
+  declarations: [AppComponent, HeaderComponent, TrainingsComponent, CertificationComponent, LookupComponent, BannerComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

@@ -3,19 +3,19 @@
 
   <div class="option-list">
     <div
-      [class]="'option ' + (tab == 'Training' ? 'active' : '')"
+      [class]="'option ' + (state.tab == 'Training' ? 'active' : '')"
       (click)="switchTab('Training')"
     >
       Training
     </div>
     <div
-      [class]="'option ' + (tab == 'Lookup' ? 'active' : '')"
+      [class]="'option ' + (state.tab == 'Lookup' ? 'active' : '')"
       (click)="switchTab('Lookup')"
     >
       Lookup
     </div>
     <div
-      [class]="'option ' + (tab == 'Certification' ? 'active' : '')"
+      [class]="'option ' + (state.tab == 'Certification' ? 'active' : '')"
       (click)="switchTab('Certification')"
     >
       Certification
