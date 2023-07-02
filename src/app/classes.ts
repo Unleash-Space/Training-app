@@ -25,3 +25,5 @@ export class attendee {
   email: string = '';
   attending: boolean = false;
 }
+
+export type Tab = 'Training' | 'Lookup' | 'Certification';

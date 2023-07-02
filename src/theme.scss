@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
 :root {
-  --primary: #f4a836;
+  --primary: #fd651f;
 }
 
 .mat-badge-content {
@@ -857,7 +857,9 @@ textarea.cdk-textarea-autosize-measuring {
   background: #424242;
 }
 .mat-autocomplete-panel
-  .mat-option.mat-selected:not(.mat-active):not(:hover):not(.mat-option-disabled) {
+  .mat-option.mat-selected:not(.mat-active):not(:hover):not(
+    .mat-option-disabled
+  ) {
   color: #fff;
 }
 .mat-badge-content {
@@ -2153,9 +2155,13 @@ th.mat-header-cell {
   .mat-slider-thumb {
   border-color: rgba(255, 255, 255, 0.3);
 }
-.mat-slider-min-value:not(.mat-slider-thumb-label-showing).cdk-focused.mat-slider-disabled
+.mat-slider-min-value:not(
+    .mat-slider-thumb-label-showing
+  ).cdk-focused.mat-slider-disabled
   .mat-slider-thumb,
-.mat-slider-min-value:not(.mat-slider-thumb-label-showing):hover.mat-slider-disabled
+.mat-slider-min-value:not(
+    .mat-slider-thumb-label-showing
+  ):hover.mat-slider-disabled
   .mat-slider-thumb {
   border-color: rgba(255, 255, 255, 0.3);
 }

@@ -1,0 +1,158 @@
+<div class="container">
+  <h1>Unleash Space event attendance</h1>
+
+  <div class="row">
+    <mat-form-field class="event-select" appearance="fill">
+      <mat-label>Select an event</mat-label>
+      <mat-select
+        [(ngModel)]="selectedEvent"
+        (selectionChange)="getEventAttendees(selectedEvent)"
+      >
+        <mat-option *ngFor="let training of trainings" [value]="training">
+          {{ training.date.time }} - {{ training.title }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field
+      [class]="
+        'facilitator-select ' + (selectedFacilitator === '' ? 'validate' : '')
+      "
+      appearance="fill"
+      required
+    >
+      <mat-label>Select the facilitator</mat-label>
+
+      <mat-select
+        [(ngModel)]="selectedFacilitator"
+        [required]="true"
+        #name="ngModel"
+      >
+        <mat-option
+          *ngFor="let facilitator of facilitators"
+          [value]="facilitator"
+        >
+          {{ facilitator }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="attendee-section" *ngIf="selectedEvent">
+    <mat-divider></mat-divider>
+    <h2 class="event-title">{{ selectedEvent.title }}</h2>
+
+    <h2 class="section-title">Attendees</h2>
+
+    <div class="attendee-data">
+      <table cellspacing="0">
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>UPI</th>
+          <th>ID</th>
+          <th>Attended</th>
+        </tr>
+        <tr *ngFor="let attendee of selectedEvent.attendees">
+          <td class="validate">
+            <mat-form-field appearance="fill">
+              <mat-label
+                *ngIf="!validName(attendee.firstName ?? '')"
+                class="alert"
+                >INVALID</mat-label
+              >
+              <input
+                matInput
+                placeholder="First Name"
+                [(ngModel)]="attendee.firstName"
+              />
+            </mat-form-field>
+          </td>
+
+          <td class="validate">
+            <mat-form-field appearance="fill">
+              <mat-label
+                *ngIf="!validName(attendee.lastName ?? '')"
+                class="alert"
+                >INVALID</mat-label
+              >
+              <input
+                matInput
+                placeholder="Last Name"
+                [(ngModel)]="attendee.lastName"
+              />
+            </mat-form-field>
+          </td>
+
+          <td class="validate">
+            <mat-form-field appearance="fill">
+              <mat-label *ngIf="!validEmail(attendee.email ?? '')" class="alert"
+                >INVALID</mat-label
+              >
+              <input
+                matInput
+                placeholder="Email"
+                [(ngModel)]="attendee.email"
+              />
+            </mat-form-field>
+          </td>
+
+          <td class="validate">
+            <mat-form-field appearance="fill">
+              <mat-label *ngIf="!validUpi(attendee.upi ?? '')" class="alert"
+                >INVALID</mat-label
+              >
+              <input matInput placeholder="UPI" [(ngModel)]="attendee.upi" />
+            </mat-form-field>
+          </td>
+
+          <td class="validate">
+            <mat-form-field appearance="fill">
+              <mat-label *ngIf="!validId(attendee.id ?? '')" class="alert"
+                >INVALID</mat-label
+              >
+              <input matInput placeholder="ID" [(ngModel)]="attendee.id" />
+            </mat-form-field>
+          </td>
+
+          <td>
+            <mat-checkbox [(ngModel)]="attendee.attending"></mat-checkbox>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="button-row">
+      <button mat-raised-button (click)="newAttendee()">New attendee</button>
+      <button mat-raised-button color="primary" (click)="preCheck()">
+        Submit
+      </button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showConfirm" class="modalContainer" (click)="showConfirm = false">
+  <div class="confirmModal modal">
+    <h2>Please confirm</h2>
+    <p>
+      Some of the Data doesn't seem quite right, please confirm if it is
+      correct.
+    </p>
+    <button mat-raised-button color="primary" (click)="submitData()">
+      Confirm
+    </button>
+  </div>
+</div>
+
+<div class="bannerCont" #banner>
+  <div>Success</div>
+</div>
+
+<div class="bannerCont error" #errorBanner>
+  <div #errorText></div>
+</div>
+
+<div class="auth_logo false" *ngIf="!authenticated">
+  <div>Please Log in</div>
+</div>
