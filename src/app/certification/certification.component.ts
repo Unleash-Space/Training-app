@@ -17,7 +17,7 @@ import {
   templateUrl: './certification.component.html',
   styleUrls: ['./certification.component.scss'],
 })
-export class CertificationComponent implements AfterContentInit {
+export class CertificationComponent {
   selectedFacilitator: string = '';
   eventOptions = trainingList;
   facilitators = facilitatorList;
@@ -30,36 +30,6 @@ export class CertificationComponent implements AfterContentInit {
   @Output() stateChange = new EventEmitter<State>();
 
   constructor(public api: ApiService) {}
-
-  async ngAfterContentInit() {
-    (await this.api.signIn()).subscribe((auth) => {
-      if (auth.isSignedIn.get() === true) {
-        this.authenticated = true;
-
-        if (auth.currentUser.get().getId() !== '102985056909257225252') {
-          this.showError('Please Sign in with the Unleash Account');
-          auth.signIn().then((res: any) => {
-            this.api.signInSuccessHandler(res);
-            this.authenticated = true;
-          });
-          return;
-        }
-
-        auth.currentUser
-          .get()
-          .reloadAuthResponse()
-          .then((user) => {
-            this.api.updateAccessToken(user);
-          });
-        return;
-      }
-
-      auth.signIn().then((res: any) => {
-        this.api.signInSuccessHandler(res);
-        this.authenticated = true;
-      });
-    });
-  }
 
   newAttendee() {
     console.log('new attendee');

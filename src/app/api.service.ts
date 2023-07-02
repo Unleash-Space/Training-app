@@ -9,7 +9,6 @@ import { GoogleApiService, GoogleAuthService } from 'ng-gapi';
 export class ApiService {
   eventbriteURL = `https://www.eventbriteapi.com/v3/organizations/${KEYS.eventbriteOrganisation}`;
   public static SESSION_STORAGE_KEY: string = 'accessToken';
-  private user: any;
 
   constructor(
     private googleAuth: GoogleAuthService,
@@ -227,14 +226,6 @@ export class ApiService {
 
   public async signIn() {
     return await this.googleAuth.getAuth();
-  }
-
-  public signInSuccessHandler(res: any) {
-    this.user = res;
-    sessionStorage.setItem(
-      ApiService.SESSION_STORAGE_KEY,
-      res.getAuthResponse().access_token
-    );
   }
 
   public updateAccessToken(user: gapi.auth2.AuthResponse) {
