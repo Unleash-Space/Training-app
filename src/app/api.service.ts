@@ -175,16 +175,16 @@ export class ApiService {
     try {
       let body: any[] = [];
       const date = new Date();
+      const dateFormatted =
+        date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
+
+      const timeFormatted = date.getHours() + ':' + date.getMinutes();
 
       attendees?.forEach((e) => {
         if (e.attending) {
           body.push([
-            date.getDate() +
-              '/' +
-              (date.getMonth() + 1) +
-              '/' +
-              date.getFullYear(),
-            date.getTime(),
+            dateFormatted,
+            timeFormatted,
             e.firstName,
             e.lastName,
             e.email,

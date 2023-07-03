@@ -4,9 +4,9 @@
   <div class="row">
     <mat-form-field class="event-select" appearance="fill">
       <mat-label>Select an event</mat-label>
-      <mat-select [(ngModel)]="selectedEvent">
+      <mat-select [(ngModel)]="selectedTraining">
         <mat-option *ngFor="let training of eventOptions" [value]="training">
-          {{ training.title }}
+          {{ training }}
         </mat-option>
       </mat-select>
     </mat-form-field>
@@ -35,9 +35,9 @@
     </mat-form-field>
   </div>
 
-  <div class="attendee-section" *ngIf="selectedEvent">
+  <div class="attendee-section">
     <mat-divider></mat-divider>
-    <h2 class="event-title">{{ selectedEvent.title }}</h2>
+    <h2 class="event-title">{{ selectedTraining }}</h2>
 
     <h2 class="section-title">Attendees</h2>
 

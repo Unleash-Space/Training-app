@@ -1,35 +1,12 @@
 [
-  {
-    "title": "CNC Router"
-  },
-  {
-    "title": "Laser Cutter"
-  },
-  {
-    "title": "3D Printer"
-  },
-  {
-    "title": "3D Printer - Curricular"
-  },
-  {
-    "title": "Vinyl Cutter"
-  },
-  {
-    "title": "Sewing Machine"
-  },
-  {
-    "title": "Soldering"
-  },
-  {
-    "title": "5G"
-  },
-  {
-    "title": "Artificial Intelligence"
-  },
-  {
-    "title": "Internet of Things"
-  },
-  {
-    "title": "Virtual Reality"
-  }
+  "CNC Router",
+  "Laser",
+  "3D Printer",
+  "Vinyl",
+  "Sewing",
+  "Soldering",
+  "5G",
+  "AI",
+  "IoT",
+  "Virtual Reality"
 ]

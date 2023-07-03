@@ -1,4 +1,4 @@
-import { eventbriteEvent, attendee, State } from '../classes';
+import { attendee, State } from '../classes';
 import { ApiService } from '../api.service';
 import facilitatorList from './../CTs.json';
 import trainingList from './../trainings.json';
@@ -9,7 +9,6 @@ import {
   EventEmitter,
   Input,
   Output,
-  ViewChild,
 } from '@angular/core';
 
 @Component({
@@ -22,9 +21,8 @@ export class CertificationComponent {
   eventOptions = trainingList;
   facilitators = facilitatorList;
   showConfirm = false;
-  authenticated = false;
   attendees: attendee[] = [];
-  selectedEvent!: eventbriteEvent;
+  selectedTraining: string = '';
 
   @Input() state!: State;
   @Output() stateChange = new EventEmitter<State>();
@@ -60,16 +58,8 @@ export class CertificationComponent {
       if (!this.validName(attendee.lastName)) valid = false;
     });
 
-    if (!anyone_attending) {
-      this.showError('No-one Attending');
-      return;
-    }
     if (this.selectedFacilitator == '') {
       this.showError('No Facilitator Selected');
-      return;
-    }
-    if (!this.authenticated) {
-      this.showError('Please Authenticate With Google');
       return;
     }
 
@@ -89,27 +79,9 @@ export class CertificationComponent {
   }
 
   async submitData() {
-    var table = '';
-
-    if (this.selectedEvent.title.includes('Router')) table = 'CNC Router';
-    else if (this.selectedEvent.title.includes('Laser')) table = 'Laser';
-    else if (this.selectedEvent.title.includes('Curricular 3D'))
-      table = '3D Printer - Curricular';
-    else if (this.selectedEvent.title.includes('3D')) table = '3D Printer';
-    else if (this.selectedEvent.title.includes('Vinyl')) table = 'Vinyl';
-    else if (this.selectedEvent.title.includes('Sewing')) table = 'Sewing';
-    else if (this.selectedEvent.title.includes('Solder')) table = 'Soldering';
-    else if (this.selectedEvent.title.includes('5G')) table = '5G';
-    else if (this.selectedEvent.title.includes('Artificial Intelligence'))
-      table = 'AI';
-    else if (this.selectedEvent.title.includes('Internet of Things'))
-      table = 'IoT';
-    else if (this.selectedEvent.title.includes('Virtual Reality'))
-      table = 'Virtual Reality';
-
-    var res = await this.api.insertData(
-      this.selectedEvent,
-      table,
+    var res = await this.api.insertCertificationData(
+      this.attendees,
+      this.selectedTraining,
       this.selectedFacilitator
     );
 
