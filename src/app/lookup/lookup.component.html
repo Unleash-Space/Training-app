@@ -7,6 +7,7 @@
   </div>
 
   <div class="list-container" *ngIf="member">
+    <h1>{{ member.name }}</h1>
     <h2>Trainings</h2>
     <div *ngFor="let training of trainings" class="item">
       <div class="name">

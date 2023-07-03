@@ -20,12 +20,20 @@ export class AppComponent implements AfterContentInit {
   constructor(public api: ApiService) {}
 
   async ngAfterContentInit() {
+    this.state.banner = {
+      open: true,
+      text: 'Loading...',
+      type: 'info',
+    };
+
     await this.authenticate();
     const res = await this.api.getTodaysEvents();
     const sheetsData = await this.api.getSheetsData();
 
     this.state.trainings = res.trainings;
     this.state.members = sheetsData;
+
+    this.state.banner.open = false;
   }
 
   async authenticate() {

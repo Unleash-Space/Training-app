@@ -223,7 +223,7 @@ export class ApiService {
       Number(localStorage.getItem('lastFetchedMembers')) ?? 0;
 
     // 10 min
-    if (new Date().getTime() - lastFetchedMembers < 600000) {
+    if (new Date().getTime() - lastFetchedMembers < 3000000) {
       const members = localStorage.getItem('members');
       if (members) return JSON.parse(members);
     }
