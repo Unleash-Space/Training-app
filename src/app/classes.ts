@@ -34,10 +34,18 @@ export type State = {
   trainings: eventbriteEvent[];
   selectedFacilitator: string;
   banner: Banner;
+  members: Member[];
 };
 
 export type Banner = {
   open: boolean;
   text?: string;
   type?: 'error' | 'success' | 'info' | 'warning';
+};
+
+export type Member = {
+  upi: string;
+  ID: string;
+  name: string;
+  trainings: number;
 };

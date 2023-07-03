@@ -1,5 +1,5 @@
 import { AfterContentInit, Component, ViewChild } from '@angular/core';
-import { State, Tab, Banner } from './classes';
+import { State, Tab, Banner, Member } from './classes';
 import { ApiService } from './api.service';
 
 @Component({
@@ -9,11 +9,12 @@ import { ApiService } from './api.service';
 })
 export class AppComponent implements AfterContentInit {
   state: State = {
-    tab: 'Certification',
+    tab: 'Lookup',
     authenticated: false,
     trainings: [],
     selectedFacilitator: '',
     banner: { open: false },
+    members: [],
   };
 
   constructor(public api: ApiService) {}
@@ -21,15 +22,21 @@ export class AppComponent implements AfterContentInit {
   async ngAfterContentInit() {
     await this.authenticate();
     const res = await this.api.getTodaysEvents();
+    const sheetsData = await this.api.getSheetsData();
 
     this.state.trainings = res.trainings;
+    this.state.members = sheetsData;
   }
 
   async authenticate() {
+    const currentTime = new Date().getTime();
+    const lastSignedIn = Number(sessionStorage.getItem('time')) ?? 0;
+
     (await this.api.signIn()).subscribe((auth) => {
       if (
         auth.isSignedIn.get() == true &&
-        auth.currentUser.get().getId() == '106162011548186143809'
+        auth.currentUser.get().getId() == '106162011548186143809' &&
+        currentTime - lastSignedIn < 3000000
       ) {
         this.state.authenticated = true;
         this.state.banner.open = false;
@@ -47,6 +54,7 @@ export class AppComponent implements AfterContentInit {
           ApiService.SESSION_STORAGE_KEY,
           res.getAuthResponse().access_token
         );
+        sessionStorage.setItem('time', '' + currentTime);
         this.authenticate();
       });
     });

@@ -1,1 +1,22 @@
-<p>lookup works!</p>
+<div class="page">
+  <div class="input-panel">
+    <mat-form-field appearance="fill">
+      <input matInput placeholder="upi" [(ngModel)]="upi" />
+    </mat-form-field>
+    <button mat-raised-button color="primary" (click)="search()">Search</button>
+  </div>
+
+  <div class="list-container" *ngIf="member">
+    <h2>Trainings</h2>
+    <div *ngFor="let training of trainings" class="item">
+      <div class="name">
+        {{ training[0] }}
+      </div>
+      <div class="status">{{ training[1] ? "✅" : "❌" }}</div>
+    </div>
+  </div>
+
+  <div class="list-container" *ngIf="member === null">
+    <h2>Not A member</h2>
+  </div>
+</div>

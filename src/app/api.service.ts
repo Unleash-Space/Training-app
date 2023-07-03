@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import KEYS from './keys.json';
-import { attendee, eventbriteEvent } from './classes';
+import { Member, attendee, eventbriteEvent } from './classes';
 
 import { GoogleApiService, GoogleAuthService } from 'ng-gapi';
 @Injectable({
@@ -214,6 +214,65 @@ export class ApiService {
       console.log(error);
       return 0;
     }
+  }
+
+  public async getSheetsData() {
+    var API_URL: string = `https://content-sheets.googleapis.com/v4/spreadsheets/${KEYS.sheetID}/values/Member-lookup!A:E`;
+
+    const lastFetchedMembers =
+      Number(localStorage.getItem('lastFetchedMembers')) ?? 0;
+
+    // 10 min
+    if (new Date().getTime() - lastFetchedMembers < 600000) {
+      const members = localStorage.getItem('members');
+      if (members) return JSON.parse(members);
+    }
+
+    var res = await fetch(API_URL, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${this.getToken()}`,
+      },
+    });
+
+    const streamReader = res.body?.getReader();
+    const decoder = new TextDecoder('utf-8');
+
+    let result = '';
+    while (true) {
+      const { done, value } = await streamReader!.read();
+      if (done) break;
+      result += decoder.decode(value);
+
+      console.log(result);
+    }
+
+    const data = JSON.parse(result).values;
+
+    const members: Member[] = data.map((e: any) => {
+      return {
+        upi: e[0],
+        ID: e[1],
+        name: e[2] + ' ' + e[3],
+        trainings: e[4],
+      };
+    });
+
+    members.sort((a, b) => {
+      if (a.upi < b.upi) return -1;
+      if (a.upi > b.upi) return 1;
+      return 0;
+    });
+
+    localStorage.setItem('members', JSON.stringify(members));
+
+    localStorage.setItem(
+      'lastFetchedMembers',
+      JSON.stringify(new Date().getTime())
+    );
+
+    return members;
   }
 
   public getToken() {
