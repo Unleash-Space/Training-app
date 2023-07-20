@@ -9,7 +9,7 @@ import { ApiService } from './api.service';
 })
 export class AppComponent implements AfterContentInit {
   state: State = {
-    tab: 'Lookup',
+    tab: 'Certification',
     authenticated: false,
     trainings: [],
     selectedFacilitator: '',
@@ -17,23 +17,21 @@ export class AppComponent implements AfterContentInit {
     members: [],
   };
 
-  constructor(public api: ApiService) {}
+  constructor(public api: ApiService) { }
 
   async ngAfterContentInit() {
-    this.state.banner = {
-      open: true,
-      text: 'Loading...',
-      type: 'info',
-    };
+    this.showBanner('Loading...', 'info')
 
     await this.authenticate();
+  }
+
+  async getData() {
     const res = await this.api.getTodaysEvents();
     const sheetsData = await this.api.getSheetsData();
 
     this.state.trainings = res.trainings;
     this.state.members = sheetsData;
-
-    this.state.banner.open = false;
+    this.showBanner('Data Fetched', 'info')
   }
 
   async authenticate() {
@@ -48,14 +46,12 @@ export class AppComponent implements AfterContentInit {
       ) {
         this.state.authenticated = true;
         this.state.banner.open = false;
+        this.showBanner('You are authenticated', 'info')
+        this.getData();
         return;
       }
 
-      this.state.banner = {
-        open: true,
-        text: 'You are not authenticated',
-        type: 'error',
-      };
+      this.showBanner('You are not authenticated', 'error', 10000)
 
       auth.signIn().then((res: any) => {
         sessionStorage.setItem(
@@ -68,12 +64,12 @@ export class AppComponent implements AfterContentInit {
     });
   }
 
-  async showError(errorMessage: string) {
-    this.state.banner.text = errorMessage;
-    this.state.banner.type = 'error';
+  async showBanner(message: string, type: 'success' | 'info' | 'error' | 'warning', duration: number = 1500) {
+    this.state.banner.text = message;
+    this.state.banner.type = type;
     this.state.banner.open = true;
     setTimeout(() => {
       this.state.banner.open = false;
-    }, 1500);
+    }, duration);
   }
 }
