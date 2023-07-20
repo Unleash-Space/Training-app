@@ -15,11 +15,21 @@ export class LookupComponent {
   member: Member | undefined | null = undefined;
 
   search() {
+    this.upi = this.upi.toLowerCase();
     const member = this.state.members.find(
-      (member) => member.upi == this.upi || member.ID == this.upi
+      (member) => member.upi.toLowerCase() == this.upi || member.ID == this.upi
     );
 
-    if (member == undefined) this.member = null;
+    if (this.state.members.length == 0) {
+      this.member = null;
+      this.showBanner('Data not loaded', 'error');
+      return
+    }
+
+    if (member == undefined) {
+      this.member = null;
+      this.showBanner('Member not found', 'info');
+    }
     else this.member = member;
 
     this.updateTrainings();
@@ -36,7 +46,7 @@ export class LookupComponent {
       ['5G', 256],
       ['IoT', 128],
       ['3D Scanner', 64],
-      ['sewing', 32],
+      ['Sewing', 32],
       ['Soldering', 16],
       ['Laser', 8],
       ['Vinyl', 4],
@@ -51,5 +61,24 @@ export class LookupComponent {
         this.trainings.push([trainingsMap[i][0], true]);
       } else this.trainings.push([trainingsMap[i][0], false]);
     }
+  }
+
+  softSubmit() {
+    this.member = null;
+    if (this.upi == null) return;
+    // must be 6,7 or 9 characters long for all UPI/ID lengths
+    if (this.upi.length < 7) return;
+    if (this.upi.length == 8) return;
+    if (this.upi.length > 9) return;
+    this.search();
+  }
+
+  async showBanner(message: string, type: 'success' | 'info' | 'error' | 'warning', duration: number = 1500) {
+    this.state.banner.text = message;
+    this.state.banner.type = type;
+    this.state.banner.open = true;
+    setTimeout(() => {
+      this.state.banner.open = false;
+    }, duration);
   }
 }

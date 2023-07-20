@@ -13,18 +13,16 @@ export class ApiService {
   constructor(
     private googleAuth: GoogleAuthService,
     public gapiService: GoogleApiService
-  ) {}
+  ) { }
 
   async getTodaysEvents(): Promise<any> {
     try {
       const NOW = new Date();
-      const startDate = `${NOW.getFullYear()}-${
-        NOW.getMonth() + 1
-      }-${NOW.getDate()}`;
+      const startDate = `${NOW.getFullYear()}-${NOW.getMonth() + 1
+        }-${NOW.getDate()}`;
 
-      const dateEnd = `${NOW.getFullYear()}-${
-        NOW.getMonth() + 1
-      }-${NOW.getDate()}`;
+      const dateEnd = `${NOW.getFullYear()}-${NOW.getMonth() + 1
+        }-${NOW.getDate()}`;
 
       const URL = `${this.eventbriteURL}/events/?start_date.range_start=${startDate}&start_date.range_end=${dateEnd}&token=${KEYS.eventbrite}`;
 
@@ -54,9 +52,8 @@ export class ApiService {
           attendees: [],
           fetchedAttendees: false,
           date: {
-            date: `${date.getDate()}/${
-              date.getMonth() + 1
-            }/${date.getFullYear()}`,
+            date: `${date.getDate()}/${date.getMonth() + 1
+              }/${date.getFullYear()}`,
             time: time,
           },
         };
@@ -257,12 +254,6 @@ export class ApiService {
         name: e[2] + ' ' + e[3],
         trainings: e[4],
       };
-    });
-
-    members.sort((a, b) => {
-      if (a.upi < b.upi) return -1;
-      if (a.upi > b.upi) return 1;
-      return 0;
     });
 
     localStorage.setItem('members', JSON.stringify(members));

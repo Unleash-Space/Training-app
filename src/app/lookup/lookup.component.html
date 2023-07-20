@@ -1,10 +1,11 @@
 <div class="page">
   <div class="input-panel">
-    <mat-form-field appearance="fill">
-      <input matInput placeholder="upi" [(ngModel)]="upi" />
-    </mat-form-field>
-    <button mat-raised-button color="primary" (click)="search()">Search</button>
-  </div>
+      <mat-form-field appearance="fill">
+        <mat-label>UPI |  ID</mat-label>
+        <input matInput placeholder="UPI |  ID" [(ngModel)]="upi" (keyup)="softSubmit()"/>
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="search()">Search</button>
+    </div>
 
   <div class="list-container" *ngIf="member">
     <h1>{{ member.name }}</h1>
@@ -15,9 +16,5 @@
       </div>
       <div class="status">{{ training[1] ? "✅" : "❌" }}</div>
     </div>
-  </div>
-
-  <div class="list-container" *ngIf="member === null">
-    <h2>Not A member</h2>
   </div>
 </div>

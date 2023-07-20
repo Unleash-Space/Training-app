@@ -3,7 +3,7 @@
 
   <div class="row">
     <mat-form-field class="event-select" appearance="fill">
-      <mat-label>Select an event</mat-label>
+      <mat-label>Equipment</mat-label>
       <mat-select [(ngModel)]="selectedTraining">
         <mat-option *ngFor="let training of eventOptions" [value]="training">
           {{ training }}
@@ -18,7 +18,7 @@
       appearance="fill"
       required
     >
-      <mat-label>Select the facilitator</mat-label>
+      <mat-label>Facilitator</mat-label>
 
       <mat-select
         [(ngModel)]="selectedFacilitator"
