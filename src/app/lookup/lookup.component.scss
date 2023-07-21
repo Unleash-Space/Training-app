@@ -1,4 +1,3 @@
-
 h1,
 h2 {
   text-align: center;
@@ -49,6 +48,26 @@ mat-form-field {
 
       .status {
         padding-left: 20px;
+        display: flex;
+        align-items: center;
+        width: 100px;
+        height: 60px;
+
+        &:hover button {
+          display: flex;
+        }
+
+        button {
+          display: none;
+          height: 30px;
+          width: 50px;
+          padding: 0;
+          text-align: center;
+          justify-content: center;
+          align-content: center;
+          align-items: center;
+          font-size: smaller;
+        }
       }
     }
   }

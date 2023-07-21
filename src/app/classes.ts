@@ -46,6 +46,8 @@ export type Banner = {
 export type Member = {
   upi: string;
   ID: string;
-  name: string;
+  firstName: string;
+  lastName: string;
+  email: string;
   trainings: number;
 };

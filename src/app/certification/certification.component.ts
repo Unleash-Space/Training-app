@@ -78,24 +78,7 @@ export class CertificationComponent {
     attendee.lastName = attendee.lastName.trim();
   }
 
-  async submitData() {
-    var res = await this.api.insertCertificationData(
-      this.attendees,
-      this.selectedTraining,
-      this.selectedFacilitator
-    );
-
-    if (res === 200) {
-      this.state.banner.text = 'Data Submitted Successfully';
-      this.state.banner.type = 'success';
-      this.state.banner.open = true;
-      setTimeout(() => {
-        this.state.banner.open = false;
-      }, 1500);
-    } else {
-      this.showError('Something went wrong');
-    }
-  }
+  async submitData() {}
 
   async showError(errorMessage: string) {
     this.state.banner.text = errorMessage;

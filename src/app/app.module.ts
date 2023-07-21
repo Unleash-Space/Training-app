@@ -10,6 +10,8 @@ import { TrainingsComponent } from './trainings/trainings.component';
 import { CertificationComponent } from './certification/certification.component';
 import { LookupComponent } from './lookup/lookup.component';
 import { BannerComponent } from './banner/banner.component';
+import { DialogComponent } from './lookup/dialog/dialog.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 let gapiClientConfig: NgGapiClientConfig = {
   client_id: KEYS.clientID,
@@ -24,17 +26,25 @@ let gapiClientConfig: NgGapiClientConfig = {
 };
 
 @NgModule({
-  declarations: [AppComponent, HeaderComponent, TrainingsComponent, CertificationComponent, LookupComponent, BannerComponent],
+  declarations: [
+    AppComponent,
+    HeaderComponent,
+    TrainingsComponent,
+    CertificationComponent,
+    LookupComponent,
+    BannerComponent,
+    DialogComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    MatDialogModule,
     MaterialModule,
     GoogleApiModule.forRoot({
       provide: NG_GAPI_CONFIG,
       useValue: gapiClientConfig,
     }),
   ],
-
   bootstrap: [AppComponent],
 })
 export class AppModule {}
