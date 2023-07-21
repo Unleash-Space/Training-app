@@ -30,7 +30,6 @@ export class CertificationComponent {
   constructor(public api: ApiService) {}
 
   newAttendee() {
-    console.log('new attendee');
     this.attendees.push({
       firstName: '',
       lastName: '',

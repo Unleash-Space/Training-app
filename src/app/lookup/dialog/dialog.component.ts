@@ -20,9 +20,7 @@ export class DialogComponent {
     public dialogRef: MatDialogRef<DialogComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: { member: Member; training: string; state: State }
-  ) {
-    console.log(data);
-  }
+  ) {}
 
   onNoClick(): void {
     this.close();

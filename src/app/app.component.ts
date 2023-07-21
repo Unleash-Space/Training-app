@@ -21,21 +21,31 @@ export class AppComponent implements AfterContentInit {
   constructor(public api: ApiService) {}
 
   async ngAfterContentInit() {
-    this.showBanner('Loading...', 'info');
-
     await this.authenticate();
+    await this.getData();
   }
 
   async getData() {
+    this.showBanner('Loading...', 'info');
     const res = await this.api.getTodaysEvents();
     const sheetsData = await this.api.getSheetsData();
 
     this.state.trainings = res.trainings;
-    this.state.members = sheetsData;
-    this.showBanner('Data Fetched', 'info');
+    this.state.members = sheetsData.members;
+    if (res.status !== 200)
+      return this.showBanner('Error Fetching Eventbrite Data', 'error');
+    if (sheetsData.status == 200)
+      return this.showBanner('Data Fetched', 'success', 5000);
+    if (sheetsData.status == 205)
+      return this.showBanner('Cached Data Fetched', 'success', 5000);
+    if (sheetsData.status > 400)
+      return this.showBanner('Error Fetching Member Data', 'error');
+
+    return;
   }
 
   async authenticate() {
+    this.showBanner('Authenticating...', 'info');
     const currentTime = new Date().getTime();
     const lastSignedIn = Number(sessionStorage.getItem('time')) ?? 0;
 
@@ -47,12 +57,11 @@ export class AppComponent implements AfterContentInit {
       ) {
         this.state.authenticated = true;
         this.state.banner.open = false;
-        this.showBanner('You are authenticated', 'info');
         this.getData();
         return;
       }
 
-      this.showBanner('You are not authenticated', 'error', 10000);
+      this.showBanner('You are not authenticated', 'error');
 
       auth.signIn().then((res: any) => {
         sessionStorage.setItem(
@@ -68,11 +77,12 @@ export class AppComponent implements AfterContentInit {
   async showBanner(
     message: string,
     type: 'success' | 'info' | 'error' | 'warning',
-    duration: number = 1500
+    duration: number = 0
   ) {
     this.state.banner.text = message;
     this.state.banner.type = type;
     this.state.banner.open = true;
+    if (duration == 0) return;
     setTimeout(() => {
       this.state.banner.open = false;
     }, duration);

@@ -17,7 +17,6 @@ export class HeaderComponent implements AfterContentInit {
   @Output() stateChange = new EventEmitter<State>();
 
   ngAfterContentInit() {
-    console.log(this.state.tab);
     if (!this.state.tab) {
       this.state.tab = 'Training';
     }

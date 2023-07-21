@@ -83,7 +83,6 @@ export class LookupComponent {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed', result);
       const trainingValue = this.trainingsMap.find(
         (training) => training[0] == type
       )! as unknown as number;

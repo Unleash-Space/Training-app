@@ -211,7 +211,7 @@ export class ApiService {
     }
   }
 
-  public async getSheetsData() {
+  public async getSheetsData(): Promise<{ members: Member[]; status: number }> {
     var API_URL: string = `https://content-sheets.googleapis.com/v4/spreadsheets/${KEYS.sheetID}/values/Member-lookup!A:F`;
 
     const lastFetchedMembers =
@@ -220,7 +220,7 @@ export class ApiService {
     // 10 min
     if (new Date().getTime() - lastFetchedMembers < 3000000) {
       const members = localStorage.getItem('members');
-      if (members) return JSON.parse(members);
+      if (members) return { members: JSON.parse(members), status: 205 };
     }
 
     var res = await fetch(API_URL, {
@@ -239,8 +239,6 @@ export class ApiService {
       const { done, value } = await streamReader!.read();
       if (done) break;
       result += decoder.decode(value);
-
-      console.log(result);
     }
 
     const data = JSON.parse(result).values;
@@ -257,13 +255,12 @@ export class ApiService {
     });
 
     localStorage.setItem('members', JSON.stringify(members));
-
     localStorage.setItem(
       'lastFetchedMembers',
       JSON.stringify(new Date().getTime())
     );
 
-    return members;
+    return { members, status: res.status };
   }
 
   public getToken() {
