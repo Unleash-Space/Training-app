@@ -1,20 +1,41 @@
 <div class="page">
   <div class="input-panel">
-      <mat-form-field appearance="fill">
-        <mat-label>UPI |  ID</mat-label>
-        <input matInput placeholder="UPI |  ID" [(ngModel)]="upi" (keyup)="softSubmit()"/>
-      </mat-form-field>
-      <button mat-raised-button color="primary" (click)="search()">Search</button>
-    </div>
+    <mat-form-field appearance="fill">
+      <mat-label>UPI | ID</mat-label>
+      <input
+        matInput
+        placeholder="UPI |  ID"
+        [(ngModel)]="upi"
+        (keyup)="softSubmit()"
+      />
+    </mat-form-field>
+    <button mat-raised-button color="primary" (click)="search()">Search</button>
+  </div>
 
   <div class="list-container" *ngIf="member">
-    <h1>{{ member.name }}</h1>
+    <h1>{{ member.firstName }} {{ member.lastName }}</h1>
+    <h3>{{ member.email }}</h3>
     <h2>Trainings</h2>
     <div *ngFor="let training of trainings" class="item">
       <div class="name">
         {{ training[0] }}
       </div>
-      <div class="status">{{ training[1] ? "✅" : "❌" }}</div>
+      <div class="status">
+        <mat-checkbox
+          class="example-margin"
+          [(ngModel)]="training[1]"
+          [disabled]="true"
+        >
+        </mat-checkbox>
+        <button
+          *ngIf="!training[1]"
+          mat-raised-button
+          color="primary"
+          (click)="openDialog(training[0], training[1])"
+        >
+          Train
+        </button>
+      </div>
     </div>
   </div>
 </div>

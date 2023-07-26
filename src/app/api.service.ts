@@ -13,16 +13,18 @@ export class ApiService {
   constructor(
     private googleAuth: GoogleAuthService,
     public gapiService: GoogleApiService
-  ) { }
+  ) {}
 
   async getTodaysEvents(): Promise<any> {
     try {
       const NOW = new Date();
-      const startDate = `${NOW.getFullYear()}-${NOW.getMonth() + 1
-        }-${NOW.getDate()}`;
+      const startDate = `${NOW.getFullYear()}-${
+        NOW.getMonth() + 1
+      }-${NOW.getDate()}`;
 
-      const dateEnd = `${NOW.getFullYear()}-${NOW.getMonth() + 1
-        }-${NOW.getDate()}`;
+      const dateEnd = `${NOW.getFullYear()}-${
+        NOW.getMonth() + 1
+      }-${NOW.getDate()}`;
 
       const URL = `${this.eventbriteURL}/events/?start_date.range_start=${startDate}&start_date.range_end=${dateEnd}&token=${KEYS.eventbrite}`;
 
@@ -52,8 +54,9 @@ export class ApiService {
           attendees: [],
           fetchedAttendees: false,
           date: {
-            date: `${date.getDate()}/${date.getMonth() + 1
-              }/${date.getFullYear()}`,
+            date: `${date.getDate()}/${
+              date.getMonth() + 1
+            }/${date.getFullYear()}`,
             time: time,
           },
         };
@@ -165,7 +168,7 @@ export class ApiService {
   }
 
   public async insertCertificationData(
-    attendees: attendee[],
+    member: Member,
     table: string,
     facilitator: string
   ) {
@@ -174,24 +177,19 @@ export class ApiService {
       const date = new Date();
       const dateFormatted =
         date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
-
       const timeFormatted = date.getHours() + ':' + date.getMinutes();
 
-      attendees?.forEach((e) => {
-        if (e.attending) {
-          body.push([
-            dateFormatted,
-            timeFormatted,
-            e.firstName,
-            e.lastName,
-            e.email,
-            parseInt(e.id),
-            e.upi,
-            facilitator,
-            'Certification',
-          ]);
-        }
-      });
+      body.push([
+        dateFormatted,
+        timeFormatted,
+        member.firstName,
+        member.lastName,
+        member.email,
+        parseInt(member.ID),
+        member.upi,
+        facilitator,
+        'Certification',
+      ]);
 
       var API_URL: string = `https://sheets.googleapis.com/v4/spreadsheets/${KEYS.sheetID}/values/'${table}'!A:F:append/?valueInputOption=RAW`;
 
@@ -213,8 +211,8 @@ export class ApiService {
     }
   }
 
-  public async getSheetsData() {
-    var API_URL: string = `https://content-sheets.googleapis.com/v4/spreadsheets/${KEYS.sheetID}/values/Member-lookup!A:E`;
+  public async getSheetsData(): Promise<{ members: Member[]; status: number }> {
+    var API_URL: string = `https://content-sheets.googleapis.com/v4/spreadsheets/${KEYS.sheetID}/values/Member-lookup!A:F`;
 
     const lastFetchedMembers =
       Number(localStorage.getItem('lastFetchedMembers')) ?? 0;
@@ -222,7 +220,7 @@ export class ApiService {
     // 10 min
     if (new Date().getTime() - lastFetchedMembers < 3000000) {
       const members = localStorage.getItem('members');
-      if (members) return JSON.parse(members);
+      if (members) return { members: JSON.parse(members), status: 205 };
     }
 
     var res = await fetch(API_URL, {
@@ -241,8 +239,6 @@ export class ApiService {
       const { done, value } = await streamReader!.read();
       if (done) break;
       result += decoder.decode(value);
-
-      console.log(result);
     }
 
     const data = JSON.parse(result).values;
@@ -251,19 +247,20 @@ export class ApiService {
       return {
         upi: e[0],
         ID: e[1],
-        name: e[2] + ' ' + e[3],
-        trainings: e[4],
+        firstName: e[2],
+        lastName: e[3],
+        email: e[4],
+        trainings: e[5],
       };
     });
 
     localStorage.setItem('members', JSON.stringify(members));
-
     localStorage.setItem(
       'lastFetchedMembers',
       JSON.stringify(new Date().getTime())
     );
 
-    return members;
+    return { members, status: res.status };
   }
 
   public getToken() {

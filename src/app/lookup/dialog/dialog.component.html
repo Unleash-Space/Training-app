@@ -1,0 +1,38 @@
+<div mat-dialog-content>
+  <h1>Confirm?</h1>
+  <h2>{{ data.member.firstName }} {{ data.member.lastName }}</h2>
+  <p>{{ data.member.upi }}</p>
+  <p>{{ data.member.ID }}</p>
+  <p>{{ data.member.email }}</p>
+  <h2>{{ data.training }}</h2>
+</div>
+<mat-form-field>
+  <mat-label>Password</mat-label>
+  <input matInput [(ngModel)]="password" type="password" />
+</mat-form-field>
+<br />
+
+<mat-form-field
+  [class]="
+    'facilitator-select ' + (selectedFacilitator === '' ? 'validate' : '')
+  "
+  appearance="fill"
+  required
+>
+  <mat-label>Facilitator</mat-label>
+
+  <mat-select
+    [(ngModel)]="selectedFacilitator"
+    [required]="true"
+    #name="ngModel"
+  >
+    <mat-option *ngFor="let facilitator of facilitators" [value]="facilitator">
+      {{ facilitator }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">No Thanks</button>
+  <button mat-raised-button color="primary" (click)="confirm()">Confirm</button>
+</div>
