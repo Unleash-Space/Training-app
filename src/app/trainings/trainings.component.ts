@@ -22,7 +22,7 @@ export class TrainingsComponent {
   @Input() state!: State;
   @Output() stateChange = new EventEmitter<State>();
 
-  constructor(public api: ApiService) {}
+  constructor(public api: ApiService) { }
 
   newAttendee() {
     this.selectedEvent.attendees.push({
@@ -90,24 +90,36 @@ export class TrainingsComponent {
     attendee.lastName = attendee.lastName.trim();
   }
 
-  async submitData() {
-    var table = '';
+  getSheetName(eventTitle: string): string {
+    // Classes
+    if (eventTitle.includes('3D Printer Practice Session - B112'))
+      return '3D Printer - Curricular';
+    if (eventTitle.includes('Laser Cutter Practice Session - 100G'))
+      return 'Laser Cutter - Curricular';
 
-    if (this.selectedEvent.title.includes('Router')) table = 'CNC Router';
-    else if (this.selectedEvent.title.includes('Laser')) table = 'Laser';
-    else if (this.selectedEvent.title.includes('Curricular 3D'))
-      table = '3D Printer - Curricular';
-    else if (this.selectedEvent.title.includes('3D')) table = '3D Printer';
-    else if (this.selectedEvent.title.includes('Vinyl')) table = 'Vinyl';
-    else if (this.selectedEvent.title.includes('Sewing')) table = 'Sewing';
-    else if (this.selectedEvent.title.includes('Solder')) table = 'Soldering';
-    else if (this.selectedEvent.title.includes('5G')) table = '5G';
-    else if (this.selectedEvent.title.includes('Artificial Intelligence'))
-      table = 'AI';
-    else if (this.selectedEvent.title.includes('Internet of Things'))
-      table = 'IoT';
-    else if (this.selectedEvent.title.includes('Virtual Reality'))
-      table = 'Virtual Reality';
+    // Create space
+    if (eventTitle.includes('Router')) return 'CNC Router';
+    if (eventTitle.includes('Laser')) return 'Laser';
+    if (eventTitle.includes('Vinyl')) return 'Vinyl';
+    if (eventTitle.includes('3D')) return '3D Printer';
+    if (eventTitle.includes('Sewing')) return 'Sewing';
+    if (eventTitle.includes('Solder')) return 'Soldering';
+
+    // Tech hub
+    if (eventTitle.includes('5G')) return '5G';
+    if (eventTitle.includes('Artificial Intelligence'))
+      return 'AI';
+    if (eventTitle.includes('Internet of Things'))
+      return 'IoT';
+    if (eventTitle.includes('Virtual Reality'))
+      return 'Virtual Reality';
+
+    this.showError('Unknown Event')
+    return "Unknown";
+  }
+
+  async submitData() {
+    var table = this.getSheetName(this.selectedEvent.title);
 
     var res = await this.api.insertData(
       this.selectedEvent,
