@@ -126,7 +126,12 @@
 
     <div class="button-row">
       <button mat-raised-button (click)="newAttendee()">New attendee</button>
-      <button mat-raised-button color="primary" (click)="preCheck()">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="preCheck()"
+        [disabled]="disableSubmit"
+      >
         Submit
       </button>
     </div>

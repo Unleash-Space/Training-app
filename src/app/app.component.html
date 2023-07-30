@@ -5,11 +5,6 @@
   *ngIf="state.tab == 'Training'"
 ></app-trainings>
 
-<app-certification
-  [(state)]="state"
-  *ngIf="state.tab == 'Certification'"
-></app-certification>
-
 <app-lookup [(state)]="state" *ngIf="state.tab == 'Lookup'"></app-lookup>
 
 <app-banner [(state)]="state"></app-banner>

@@ -18,11 +18,12 @@ export class TrainingsComponent {
   selectedEvent: any;
   showConfirm = false;
   facilitators = facilitatorList;
+  disableSubmit = true;
 
   @Input() state!: State;
   @Output() stateChange = new EventEmitter<State>();
 
-  constructor(public api: ApiService) { }
+  constructor(public api: ApiService) {}
 
   newAttendee() {
     this.selectedEvent.attendees.push({
@@ -43,6 +44,7 @@ export class TrainingsComponent {
 
     event.fetchedAttendees = true;
     event.attendees = await this.api.getEventAttendees(event.id);
+    this.disableSubmit = false;
   }
 
   async preCheck() {
@@ -62,27 +64,29 @@ export class TrainingsComponent {
       if (!this.validName(attendee.lastName)) valid = false;
     });
 
-    if (!anyone_attending) {
-      this.showError('No-one Attending');
-      return;
-    }
-    if (this.state.selectedFacilitator == '') {
-      this.showError('No Facilitator Selected');
-      return;
-    }
-    if (!this.state.authenticated) {
-      this.showError('Please Authenticate With Google');
-      return;
-    }
+    if (!anyone_attending)
+      return this.showBanner('No-one Attending', 'error', 20000);
 
-    if (valid) {
-      this.submitData();
-    } else {
-      this.showConfirm = true;
-    }
+    if (this.state.selectedFacilitator == '')
+      return this.showBanner('No Facilitator Selected', 'error', 20000);
+
+    if (!this.state.authenticated)
+      return this.showBanner('Please Authenticate With Google', 'error', 20000);
+
+    if (!this.state.authenticated)
+      return this.showBanner('Please Authenticate With Google', 'error', 20000);
+
+    if (!valid)
+      return this.showBanner(
+        "One of the attendees doesn't seem right",
+        'error',
+        20000
+      );
+
+    this.submitData();
   }
 
-  async trimSpaces(attendee: attendee) {
+  trimSpaces(attendee: attendee) {
     attendee.email = attendee.email.trim();
     attendee.id = attendee.id.trim();
     attendee.upi = attendee.upi.trim();
@@ -107,18 +111,16 @@ export class TrainingsComponent {
 
     // Tech hub
     if (eventTitle.includes('5G')) return '5G';
-    if (eventTitle.includes('Artificial Intelligence'))
-      return 'AI';
-    if (eventTitle.includes('Internet of Things'))
-      return 'IoT';
-    if (eventTitle.includes('Virtual Reality'))
-      return 'Virtual Reality';
+    if (eventTitle.includes('Artificial Intelligence')) return 'AI';
+    if (eventTitle.includes('Internet of Things')) return 'IoT';
+    if (eventTitle.includes('Virtual Reality')) return 'Virtual Reality';
 
-    this.showError('Unknown Event')
-    return "Unknown";
+    this.showBanner('Unknown Event', 'error', 20000);
+    return 'Unknown';
   }
 
   async submitData() {
+    this.disableSubmit = true;
     var table = this.getSheetName(this.selectedEvent.title);
 
     var res = await this.api.insertData(
@@ -128,24 +130,29 @@ export class TrainingsComponent {
     );
 
     if (res === 200) {
-      this.state.banner.text = 'Data Submitted Successfully';
-      this.state.banner.type = 'success';
-      this.state.banner.open = true;
+      this.showBanner(`Data Submitted Successfully`, 'success', 1000 * 60 * 60);
+
       setTimeout(() => {
-        this.state.banner.open = false;
-      }, 1500);
+        this.disableSubmit = false;
+      }, 1000 * 60 * 10);
     } else {
-      this.showError('Something went wrong');
+      this.showBanner(`Something went wrong code: ${res}`, 'error');
+      this.disableSubmit = false;
     }
   }
 
-  async showError(errorMessage: string) {
-    this.state.banner.text = errorMessage;
-    this.state.banner.type = 'error';
+  async showBanner(
+    message: string,
+    type: 'success' | 'info' | 'error' | 'warning',
+    duration: number = 0
+  ) {
+    this.state.banner.text = message;
+    this.state.banner.type = type;
     this.state.banner.open = true;
+    if (duration == 0) return;
     setTimeout(() => {
       this.state.banner.open = false;
-    }, 1500);
+    }, duration);
   }
 
   public validId(id: string) {
