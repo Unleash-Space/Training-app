@@ -13,28 +13,63 @@
   </div>
 
   <div class="list-container" *ngIf="member">
-    <h1>{{ member.firstName }} {{ member.lastName }}</h1>
-    <h3>{{ member.email }}</h3>
-    <h2>Trainings</h2>
-    <div *ngFor="let training of trainings" class="item">
-      <div class="name">
-        {{ training[0] }}
+    <div class="person-details">
+      <h1>{{ member.firstName }} {{ member.lastName }}</h1>
+      <h3>{{ member.email }}</h3>
+    </div>
+
+    <div class="trainings">
+      <div class="venue-col">
+        <h2>Maker Space</h2>
+        <div *ngFor="let training of trainings">
+          <div *ngIf="training.venue == 'maker-space'" class="item">
+            <div class="name">
+              {{ training.name }}
+            </div>
+            <div class="status">
+              <mat-checkbox
+                class="example-margin"
+                [(ngModel)]="training.complete"
+                [disabled]="true"
+              >
+              </mat-checkbox>
+              <button
+                *ngIf="!training.complete"
+                mat-raised-button
+                color="primary"
+                (click)="openDialog(training.name)"
+              >
+                Train
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="status">
-        <mat-checkbox
-          class="example-margin"
-          [(ngModel)]="training[1]"
-          [disabled]="true"
-        >
-        </mat-checkbox>
-        <button
-          *ngIf="!training[1]"
-          mat-raised-button
-          color="primary"
-          (click)="openDialog(training[0], training[1])"
-        >
-          Train
-        </button>
+      <div class="venue-col">
+        <h2>Tech Hub</h2>
+        <div *ngFor="let training of trainings">
+          <div *ngIf="training.venue == 'tech-hub'" class="item">
+            <div class="name">
+              {{ training.name }}
+            </div>
+            <div class="status">
+              <mat-checkbox
+                class="example-margin"
+                [(ngModel)]="training.complete"
+                [disabled]="true"
+              >
+              </mat-checkbox>
+              <button
+                *ngIf="!training.complete"
+                mat-raised-button
+                color="primary"
+                (click)="openDialog(training.name)"
+              >
+                Train
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

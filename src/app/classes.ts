@@ -51,3 +51,10 @@ export type Member = {
   email: string;
   trainings: number;
 };
+
+export type Training = {
+  name: string;
+  value: number;
+  venue: 'Online' | 'maker-space' | 'tech-hub' | '';
+  complete?: boolean;
+};

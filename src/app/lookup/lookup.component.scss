@@ -21,23 +21,42 @@ mat-form-field {
   justify-content: center;
   width: 100%;
 
+  h3 {
+    text-align: center;
+  }
+
   .list-container {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 30%;
+    flex-direction: row;
+    width: 50%;
     height: 90vh;
+    flex-direction: column;
+
+    .person-details {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .trainings {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .venue-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 49%;
+    }
 
     .item {
       display: flex;
       flex-direction: row;
       align-items: center;
-      border-bottom: 2px solid var(--primary);
-
-      &:last-child {
-        border-bottom: none;
-      }
+      border-top: 2px solid var(--primary);
 
       .name {
         text-align: right;

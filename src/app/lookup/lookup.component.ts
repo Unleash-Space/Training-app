@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, Inject } from '@angular/core';
-import { Member, State } from '../classes';
+import { Member, State, Training } from '../classes';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from './dialog/dialog.component';
 
@@ -12,20 +12,20 @@ export class LookupComponent {
   @Input() state!: State;
   @Output() stateChange = new EventEmitter<State>();
   upi: string = '';
-  trainings: any[] = [];
+  trainings: Training[] = [];
   member: Member | undefined | null = undefined;
-  trainingsMap = [
-    ['VR', 1024],
-    ['AI', 512],
-    ['5G', 256],
-    ['IoT', 128],
-    ['3D Scanner', 64],
-    ['Sewing', 32],
-    ['Soldering', 16],
-    ['Laser', 8],
-    ['Vinyl', 4],
-    ['CNC router', 2],
-    ['3D Printer', 1],
+  trainingsMap: Training[] = [
+    { name: 'VR', value: 1024, venue: 'tech-hub' },
+    { name: 'AI', value: 512, venue: 'tech-hub' },
+    { name: '5G', value: 256, venue: 'tech-hub' },
+    { name: 'IoT', value: 128, venue: 'tech-hub' },
+    { name: '3D Scanner', value: 64, venue: '' },
+    { name: 'Sewing', value: 32, venue: 'maker-space' },
+    { name: 'Soldering', value: 16, venue: 'maker-space' },
+    { name: 'Laser', value: 8, venue: 'maker-space' },
+    { name: 'Vinyl', value: 4, venue: 'maker-space' },
+    { name: 'CNC router', value: 2, venue: 'maker-space' },
+    { name: '3D Printer', value: 1, venue: 'maker-space' },
   ];
 
   constructor(public dialog: MatDialog) {}
@@ -57,11 +57,19 @@ export class LookupComponent {
     const trainingsMap = this.trainingsMap;
 
     for (let i = 0; i < trainingsMap.length; i++) {
-      const value = trainingsMap[i][1] as number;
+      const value = trainingsMap[i].value;
+      const tempTraining: Training = {
+        name: trainingsMap[i].name,
+        value: trainingsMap[i].value,
+        venue: trainingsMap[i].venue,
+      };
       if (trainingsValue >= value) {
         trainingsValue -= value;
-        this.trainings.push([trainingsMap[i][0], true]);
-      } else this.trainings.push([trainingsMap[i][0], false]);
+        tempTraining.complete = true;
+      } else {
+        tempTraining.complete = false;
+      }
+      this.trainings.push(tempTraining);
     }
   }
 
@@ -75,20 +83,19 @@ export class LookupComponent {
     this.search();
   }
 
-  openDialog(type: string, status: string): void {
-    if (status) return;
-
+  openDialog(type: string): void {
     const dialogRef = this.dialog.open(DialogComponent, {
       data: { member: this.member, training: type, state: this.state },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       const trainingValue = this.trainingsMap.find(
-        (training) => training[0] == type
+        (training) => training.name == type
       )! as unknown as number;
 
       if (result) {
-        this.trainings.find((training) => training[0] == type)![1] = true;
+        this.trainings.find((training) => training.name == type)!.complete =
+          true;
         this.member!.trainings += trainingValue;
       }
     });
