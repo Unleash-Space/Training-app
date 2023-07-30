@@ -82,6 +82,7 @@ export class ApiService {
 
     raw.forEach((attendee: any) => {
       try {
+        if (attendee.status === 'Not Attending') return;
         attendees.push({
           attending: false,
 
