@@ -7,7 +7,6 @@ import { AppComponent } from './app.component';
 import { GoogleApiModule, NgGapiClientConfig, NG_GAPI_CONFIG } from 'ng-gapi';
 import { HeaderComponent } from './header/header.component';
 import { TrainingsComponent } from './trainings/trainings.component';
-import { CertificationComponent } from './certification/certification.component';
 import { LookupComponent } from './lookup/lookup.component';
 import { BannerComponent } from './banner/banner.component';
 import { DialogComponent } from './lookup/dialog/dialog.component';
@@ -30,7 +29,6 @@ let gapiClientConfig: NgGapiClientConfig = {
     AppComponent,
     HeaderComponent,
     TrainingsComponent,
-    CertificationComponent,
     LookupComponent,
     BannerComponent,
     DialogComponent,
