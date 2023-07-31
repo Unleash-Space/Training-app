@@ -28,20 +28,24 @@ export class AppComponent implements AfterContentInit {
   async getData() {
     this.showBanner('Loading...', 'info');
     const res = await this.api.getTodaysEvents();
-    const sheetsData = await this.api.getSheetsData();
 
     this.state.trainings = res.trainings;
-    this.state.members = sheetsData.members;
     if (res.status !== 200)
       return this.showBanner('Error Fetching Eventbrite Data', 'error');
+
+    this.getSheetData();
+    return;
+  }
+
+  async getSheetData() {
+    const sheetsData = await this.api.getSheetsData();
+    this.state.members = sheetsData.members;
     if (sheetsData.status == 200)
       return this.showBanner('Data Fetched', 'success', 5000);
     if (sheetsData.status == 205)
       return this.showBanner('Cached Data Fetched', 'success', 5000);
     if (sheetsData.status > 400)
       return this.showBanner('Error Fetching Member Data', 'error');
-
-    return;
   }
 
   async authenticate() {
