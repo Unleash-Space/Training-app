@@ -6,8 +6,10 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { ApiService } from '../api.service';
+import { ApiService } from '../services/api.service';
 import facilitatorList from './../CTs.json';
+import { DataService } from '../services/data.service';
+import { ValidateService } from '../services/validate.service';
 
 @Component({
   selector: 'app-trainings',
@@ -23,7 +25,7 @@ export class TrainingsComponent {
   @Input() state!: State;
   @Output() stateChange = new EventEmitter<State>();
 
-  constructor(public api: ApiService) {}
+  constructor(public api: ApiService, public validate: ValidateService) {}
 
   newAttendee() {
     this.selectedEvent.attendees.push({
@@ -57,11 +59,11 @@ export class TrainingsComponent {
       else anyone_attending = true;
       this.trimSpaces(attendee);
 
-      if (!this.validId(attendee.id)) valid = false;
-      if (!this.validUpi(attendee.upi)) valid = false;
-      if (!this.validEmail(attendee.email)) valid = false;
-      if (!this.validName(attendee.firstName)) valid = false;
-      if (!this.validName(attendee.lastName)) valid = false;
+      if (!this.validate.id(attendee.id)) valid = false;
+      if (!this.validate.upi(attendee.upi)) valid = false;
+      if (!this.validate.email(attendee.email)) valid = false;
+      if (!this.validate.name(attendee.firstName)) valid = false;
+      if (!this.validate.name(attendee.lastName)) valid = false;
     });
 
     if (!anyone_attending)
@@ -85,6 +87,8 @@ export class TrainingsComponent {
 
     this.submitData();
   }
+
+  searchMember() {}
 
   trimSpaces(attendee: attendee) {
     attendee.email = attendee.email.trim();
@@ -153,34 +157,5 @@ export class TrainingsComponent {
     setTimeout(() => {
       this.state.banner.open = false;
     }, duration);
-  }
-
-  public validId(id: string) {
-    id = id.trim();
-
-    const regExp = /^(\d{7}|\d{9})$/;
-
-    return id.match(regExp) !== null;
-  }
-
-  public validUpi(upi: string) {
-    upi = upi.trim();
-
-    const regExp = /^[a-zA-Z]{1,4}\d{3}$/;
-    return upi.match(regExp) !== null;
-  }
-
-  public validEmail(email: string) {
-    email = email.trim();
-
-    const regExp = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-    return email.match(regExp) !== null;
-  }
-
-  public validName(name: string) {
-    name = name.trim();
-
-    const regExp = /..+/;
-    return name.match(regExp) !== null;
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import KEYS from './keys.json';
-import { Member, attendee, eventbriteEvent } from './classes';
+import KEYS from '../keys.json';
+import { Member, attendee, eventbriteEvent } from '../classes';
 
 import { GoogleApiService, GoogleAuthService } from 'ng-gapi';
 @Injectable({

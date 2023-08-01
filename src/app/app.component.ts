@@ -1,6 +1,6 @@
 import { AfterContentInit, Component, ViewChild } from '@angular/core';
 import { State, Tab, Banner, Member } from './classes';
-import { ApiService } from './api.service';
+import { ApiService } from './services/api.service';
 import { MatDialogModule } from '@angular/material/dialog';
 
 @Component({
