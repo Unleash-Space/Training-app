@@ -8,7 +8,7 @@ export class eventbriteEvent {
     local: '',
     utc: '',
   };
-  attendees?: attendee[];
+  attendees?: Attendee[];
   fetchedAttendees: boolean = false;
   date: { date: string; time: string } = { date: '', time: '' };
   name?: any;
@@ -17,13 +17,15 @@ export class eventbriteEvent {
   constructor() {}
 }
 
-export class attendee {
+export class Attendee {
   firstName: string = '';
   lastName: string = '';
   id: string = '';
   upi: string = '';
   email: string = '';
   attending: boolean = false;
+  idFound?: boolean = false;
+  upiFound?: boolean = false;
 }
 
 export type Tab = 'Training' | 'Lookup' | 'Certification';

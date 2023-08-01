@@ -1,9 +1,10 @@
-import { eventbriteEvent, attendee, State } from '../classes';
+import { eventbriteEvent, Attendee, State } from '../classes';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ApiService } from '../services/api.service';
 import facilitatorList from './../CTs.json';
 import { ValidateService } from '../services/validate.service';
 import { BannerService } from '../services/banner.service';
+import { DataService } from '../services/data.service';
 
 @Component({
   selector: 'app-trainings',
@@ -22,7 +23,8 @@ export class TrainingsComponent {
   constructor(
     public api: ApiService,
     public validate: ValidateService,
-    public banner: BannerService
+    public banner: BannerService,
+    public data: DataService
   ) {}
 
   newAttendee() {
@@ -38,12 +40,16 @@ export class TrainingsComponent {
 
   async getEventAttendees(event: eventbriteEvent) {
     // already have attendees?
-    if (event.fetchedAttendees) {
-      return;
-    }
+    if (event.fetchedAttendees) return;
 
     event.fetchedAttendees = true;
     event.attendees = await this.api.getEventAttendees(event.id);
+
+    event.attendees.forEach((attendee: Attendee) => {
+      attendee.upiFound = this.data.searchMember(attendee.upi) !== null;
+      attendee.idFound = this.data.searchMember(attendee.id) !== null;
+    });
+
     this.disableSubmit = false;
   }
 
@@ -96,7 +102,7 @@ export class TrainingsComponent {
 
   searchMember() {}
 
-  trimSpaces(attendee: attendee) {
+  trimSpaces(attendee: Attendee) {
     attendee.email = attendee.email.trim();
     attendee.id = attendee.id.trim();
     attendee.upi = attendee.upi.trim();

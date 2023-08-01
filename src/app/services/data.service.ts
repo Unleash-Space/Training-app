@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import KEYS from '../keys.json';
-import { Member, State, attendee, eventbriteEvent } from '../classes';
+import { Member, State } from '../classes';
 import { BannerService } from './banner.service';
 
 @Injectable({

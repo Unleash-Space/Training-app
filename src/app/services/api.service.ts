@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import KEYS from '../keys.json';
-import { Member, attendee, eventbriteEvent } from '../classes';
+import { Member, Attendee, eventbriteEvent } from '../classes';
 
 import { GoogleApiService, GoogleAuthService } from 'ng-gapi';
 @Injectable({
@@ -71,7 +71,7 @@ export class ApiService {
   }
 
   async getEventAttendees(id: string) {
-    var attendees: attendee[] = [];
+    var attendees: Attendee[] = [];
     const URL = `https://www.eventbriteapi.com/v3/events/${id}/attendees/?token=${KEYS.eventbrite}`;
 
     const raw = (await (await fetch(URL, { method: 'GET' })).json()).attendees;

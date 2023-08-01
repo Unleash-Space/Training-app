@@ -57,11 +57,20 @@
           <th>Attended</th>
         </tr>
         <tr *ngFor="let attendee of selectedEvent.attendees">
-          <td class="member">x</td>
+          <td class="member">
+            {{
+              attendee.upiFound && attendee.idFound
+                ? "🟢"
+                : attendee.upiFound || attendee.idFound
+                ? "🟠"
+                : "🔴"
+            }}
+          </td>
+
           <td class="validate">
             <mat-form-field appearance="fill">
               <mat-label
-                *ngIf="!validate.name(attendee.firstName ?? '')"
+                *ngIf="!validate.name(attendee.firstName)"
                 class="alert"
                 >INVALID</mat-label
               >
@@ -75,9 +84,7 @@
 
           <td class="validate">
             <mat-form-field appearance="fill">
-              <mat-label
-                *ngIf="!validate.name(attendee.lastName ?? '')"
-                class="alert"
+              <mat-label *ngIf="!validate.name(attendee.lastName)" class="alert"
                 >INVALID</mat-label
               >
               <input
@@ -90,9 +97,7 @@
 
           <td class="validate">
             <mat-form-field appearance="fill">
-              <mat-label
-                *ngIf="!validate.email(attendee.email ?? '')"
-                class="alert"
+              <mat-label *ngIf="!validate.email(attendee.email)" class="alert"
                 >INVALID</mat-label
               >
               <input
@@ -105,7 +110,7 @@
 
           <td class="validate">
             <mat-form-field appearance="fill">
-              <mat-label *ngIf="!validate.upi(attendee.upi ?? '')" class="alert"
+              <mat-label *ngIf="!validate.upi(attendee.upi)" class="alert"
                 >INVALID</mat-label
               >
               <input matInput placeholder="UPI" [(ngModel)]="attendee.upi" />
@@ -114,7 +119,7 @@
 
           <td class="validate">
             <mat-form-field appearance="fill">
-              <mat-label *ngIf="!validate.id(attendee.id ?? '')" class="alert"
+              <mat-label *ngIf="!validate.id(attendee.id)" class="alert"
                 >INVALID</mat-label
               >
               <input matInput placeholder="ID" [(ngModel)]="attendee.id" />
