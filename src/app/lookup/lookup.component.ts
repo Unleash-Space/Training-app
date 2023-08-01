@@ -3,6 +3,7 @@ import { Member, State, Training } from '../classes';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from './dialog/dialog.component';
 import { BannerService } from '../services/banner.service';
+import { DataService } from '../services/data.service';
 
 @Component({
   selector: 'app-lookup',
@@ -29,25 +30,14 @@ export class LookupComponent {
     { name: '3D Printer', value: 1, venue: 'maker-space' },
   ];
 
-  constructor(public dialog: MatDialog, public banner: BannerService) {}
+  constructor(
+    public dialog: MatDialog,
+    public banner: BannerService,
+    public data: DataService
+  ) {}
 
   search() {
-    this.upi = this.upi.toLowerCase();
-    const member = this.state.members.find(
-      (member) => member.upi.toLowerCase() == this.upi || member.ID == this.upi
-    );
-
-    if (this.state.members.length == 0) {
-      this.member = null;
-      this.banner.show('Data not loaded', 'error');
-      return;
-    }
-
-    if (member == undefined) {
-      this.member = null;
-      this.banner.show('Member not found', 'info');
-    } else this.member = member;
-
+    this.member = this.data.searchMember(this.upi);
     this.updateTrainings();
   }
 

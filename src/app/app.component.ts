@@ -2,6 +2,7 @@ import { AfterContentInit, Component } from '@angular/core';
 import { State } from './classes';
 import { ApiService } from './services/api.service';
 import { BannerService } from './services/banner.service';
+import { ServicesService } from './services/services.service';
 
 @Component({
   selector: 'app-root',
@@ -18,10 +19,15 @@ export class AppComponent implements AfterContentInit {
     members: [],
   };
 
-  constructor(public api: ApiService, public banner: BannerService) {}
+  constructor(
+    public api: ApiService,
+    public banner: BannerService,
+    public services: ServicesService
+  ) {}
 
   async ngAfterContentInit() {
-    this.banner.init(this.state);
+    this.services.init(this.state);
+
     await this.authenticate();
     await this.getData();
   }

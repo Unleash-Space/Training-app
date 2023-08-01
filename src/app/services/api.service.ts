@@ -64,10 +64,6 @@ export class ApiService {
         events.push(format);
       });
 
-      // events.forEach(async (e) => {
-      //   e.attendees = await this.getEventAttendees(e.id);
-      // });
-
       return { trainings: events, status: 200 };
     } catch {
       return { trainings: [], status: 0 };
