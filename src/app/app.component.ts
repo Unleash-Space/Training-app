@@ -2,6 +2,7 @@ import { AfterContentInit, Component, ViewChild } from '@angular/core';
 import { State, Tab, Banner, Member } from './classes';
 import { ApiService } from './services/api.service';
 import { MatDialogModule } from '@angular/material/dialog';
+import { BannerService } from './services/banner.service';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +19,7 @@ export class AppComponent implements AfterContentInit {
     members: [],
   };
 
-  constructor(public api: ApiService) {}
+  constructor(public api: ApiService, public banner: BannerService) {}
 
   async ngAfterContentInit() {
     await this.authenticate();
@@ -26,12 +27,12 @@ export class AppComponent implements AfterContentInit {
   }
 
   async getData() {
-    this.showBanner('Loading...', 'info');
+    this.banner.show('Loading...', 'info');
     const res = await this.api.getTodaysEvents();
 
     this.state.trainings = res.trainings;
     if (res.status !== 200)
-      return this.showBanner('Error Fetching Eventbrite Data', 'error');
+      return this.banner.show('Error Fetching Eventbrite Data', 'error');
 
     this.getSheetData();
     return;
@@ -41,15 +42,15 @@ export class AppComponent implements AfterContentInit {
     const sheetsData = await this.api.getSheetsData();
     this.state.members = sheetsData.members;
     if (sheetsData.status == 200)
-      return this.showBanner('Data Fetched', 'success', 5000);
+      return this.banner.show('Data Fetched', 'success', 5000);
     if (sheetsData.status == 205)
-      return this.showBanner('Cached Data Fetched', 'success', 5000);
+      return this.banner.show('Cached Data Fetched', 'success', 5000);
     if (sheetsData.status > 400)
-      return this.showBanner('Error Fetching Member Data', 'error');
+      return this.banner.show('Error Fetching Member Data', 'error');
   }
 
   async authenticate() {
-    this.showBanner('Authenticating...', 'info');
+    this.banner.show('Authenticating...', 'info');
     const currentTime = new Date().getTime();
     const lastSignedIn = Number(sessionStorage.getItem('time')) ?? 0;
 
@@ -65,7 +66,7 @@ export class AppComponent implements AfterContentInit {
         return;
       }
 
-      this.showBanner('You are not authenticated', 'error');
+      this.banner.show('You are not authenticated', 'error');
 
       auth.signIn().then((res: any) => {
         sessionStorage.setItem(
@@ -76,19 +77,5 @@ export class AppComponent implements AfterContentInit {
         this.authenticate();
       });
     });
-  }
-
-  async showBanner(
-    message: string,
-    type: 'success' | 'info' | 'error' | 'warning',
-    duration: number = 0
-  ) {
-    this.state.banner.text = message;
-    this.state.banner.type = type;
-    this.state.banner.open = true;
-    if (duration == 0) return;
-    setTimeout(() => {
-      this.state.banner.open = false;
-    }, duration);
   }
 }

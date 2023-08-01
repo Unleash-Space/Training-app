@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output, Inject } from '@angular/core';
 import { Member, State, Training } from '../classes';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from './dialog/dialog.component';
+import { BannerService } from '../services/banner.service';
 
 @Component({
   selector: 'app-lookup',
@@ -28,7 +29,7 @@ export class LookupComponent {
     { name: '3D Printer', value: 1, venue: 'maker-space' },
   ];
 
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, public banner: BannerService) {}
 
   search() {
     this.upi = this.upi.toLowerCase();
@@ -38,13 +39,13 @@ export class LookupComponent {
 
     if (this.state.members.length == 0) {
       this.member = null;
-      this.showBanner('Data not loaded', 'error');
+      this.banner.show('Data not loaded', 'error');
       return;
     }
 
     if (member == undefined) {
       this.member = null;
-      this.showBanner('Member not found', 'info');
+      this.banner.show('Member not found', 'info');
     } else this.member = member;
 
     this.updateTrainings();
@@ -99,18 +100,5 @@ export class LookupComponent {
         this.member!.trainings += trainingValue;
       }
     });
-  }
-
-  async showBanner(
-    message: string,
-    type: 'success' | 'info' | 'error' | 'warning',
-    duration: number = 1500
-  ) {
-    this.state.banner.text = message;
-    this.state.banner.type = type;
-    this.state.banner.open = true;
-    setTimeout(() => {
-      this.state.banner.open = false;
-    }, duration);
   }
 }

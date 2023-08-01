@@ -4,6 +4,7 @@ import { ApiService } from 'src/app/services/api.service';
 import { Member, State } from 'src/app/classes';
 import facilitatorList from './../../CTs.json';
 import KEYS from './../../keys.json';
+import { BannerService } from 'src/app/services/banner.service';
 
 @Component({
   selector: 'app-dialog',
@@ -18,6 +19,7 @@ export class DialogComponent {
   constructor(
     public api: ApiService,
     public dialogRef: MatDialogRef<DialogComponent>,
+    public banner: BannerService,
     @Inject(MAT_DIALOG_DATA)
     public data: { member: Member; training: string; state: State }
   ) {}
@@ -32,11 +34,11 @@ export class DialogComponent {
 
   confirm() {
     if (this.password == KEYS.certificationPassword) {
-      this.showBanner('Submitting', 'info');
+      this.banner.show('Submitting', 'info');
       this.submitUserData();
       return;
     }
-    this.showBanner('Incorrect Password', 'error');
+    this.banner.show('Incorrect Password', 'error');
     this.dialogRef.close(false);
     return;
   }
@@ -49,25 +51,12 @@ export class DialogComponent {
     );
 
     if (res === 200) {
-      this.showBanner('Submitted', 'success');
+      this.banner.show('Submitted', 'success');
       this.dialogRef.close(true);
       return;
     } else {
       this.dialogRef.close(false);
-      this.showBanner(`Something went wrong`, 'error', 5000);
+      this.banner.show(`Something went wrong`, 'error', 5000);
     }
-  }
-
-  async showBanner(
-    message: string,
-    type: 'success' | 'info' | 'error' | 'warning',
-    duration: number = 1500
-  ) {
-    this.data.state.banner.text = message;
-    this.data.state.banner.type = type;
-    this.data.state.banner.open = true;
-    setTimeout(() => {
-      this.data.state.banner.open = false;
-    }, duration);
   }
 }

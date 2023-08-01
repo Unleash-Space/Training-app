@@ -1,21 +1,13 @@
 import { Injectable } from '@angular/core';
-import KEYS from '../keys.json';
-import { Member, attendee, eventbriteEvent } from '../classes';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ValidateService {
-  eventbriteURL = `https://www.eventbriteapi.com/v3/organizations/${KEYS.eventbriteOrganisation}`;
-  public static SESSION_STORAGE_KEY: string = 'accessToken';
-
-  constructor() {}
-
   public id(id: string) {
     id = id.trim();
 
     const regExp = /^(\d{7}|\d{9})$/;
-
     return id.match(regExp) !== null;
   }
 

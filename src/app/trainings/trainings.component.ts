@@ -10,6 +10,7 @@ import { ApiService } from '../services/api.service';
 import facilitatorList from './../CTs.json';
 import { DataService } from '../services/data.service';
 import { ValidateService } from '../services/validate.service';
+import { BannerService } from '../services/banner.service';
 
 @Component({
   selector: 'app-trainings',
@@ -25,7 +26,11 @@ export class TrainingsComponent {
   @Input() state!: State;
   @Output() stateChange = new EventEmitter<State>();
 
-  constructor(public api: ApiService, public validate: ValidateService) {}
+  constructor(
+    public api: ApiService,
+    public validate: ValidateService,
+    public banner: BannerService
+  ) {}
 
   newAttendee() {
     this.selectedEvent.attendees.push({
@@ -67,19 +72,27 @@ export class TrainingsComponent {
     });
 
     if (!anyone_attending)
-      return this.showBanner('No-one Attending', 'error', 20000);
+      return this.banner.show('No-one Attending', 'error', 20000);
 
     if (this.state.selectedFacilitator == '')
-      return this.showBanner('No Facilitator Selected', 'error', 20000);
+      return this.banner.show('No Facilitator Selected', 'error', 20000);
 
     if (!this.state.authenticated)
-      return this.showBanner('Please Authenticate With Google', 'error', 20000);
+      return this.banner.show(
+        'Please Authenticate With Google',
+        'error',
+        20000
+      );
 
     if (!this.state.authenticated)
-      return this.showBanner('Please Authenticate With Google', 'error', 20000);
+      return this.banner.show(
+        'Please Authenticate With Google',
+        'error',
+        20000
+      );
 
     if (!valid)
-      return this.showBanner(
+      return this.banner.show(
         "One of the attendees doesn't seem right",
         'error',
         20000
@@ -119,7 +132,7 @@ export class TrainingsComponent {
     if (eventTitle.includes('Internet of Things')) return 'IoT';
     if (eventTitle.includes('Virtual Reality')) return 'Virtual Reality';
 
-    this.showBanner('Unknown Event', 'error', 20000);
+    this.banner.show('Unknown Event', 'error', 20000);
     return 'Unknown';
   }
 
@@ -134,28 +147,18 @@ export class TrainingsComponent {
     );
 
     if (res === 200) {
-      this.showBanner(`Data Submitted Successfully`, 'success', 1000 * 60 * 60);
+      this.banner.show(
+        `Data Submitted Successfully`,
+        'success',
+        1000 * 60 * 60
+      );
 
       setTimeout(() => {
         this.disableSubmit = false;
       }, 1000 * 60 * 10);
     } else {
-      this.showBanner(`Something went wrong code: ${res}`, 'error');
+      this.banner.show(`Something went wrong code: ${res}`, 'error');
       this.disableSubmit = false;
     }
-  }
-
-  async showBanner(
-    message: string,
-    type: 'success' | 'info' | 'error' | 'warning',
-    duration: number = 0
-  ) {
-    this.state.banner.text = message;
-    this.state.banner.type = type;
-    this.state.banner.open = true;
-    if (duration == 0) return;
-    setTimeout(() => {
-      this.state.banner.open = false;
-    }, duration);
   }
 }
