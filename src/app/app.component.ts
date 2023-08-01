@@ -1,7 +1,6 @@
-import { AfterContentInit, Component, ViewChild } from '@angular/core';
-import { State, Tab, Banner, Member } from './classes';
+import { AfterContentInit, Component } from '@angular/core';
+import { State } from './classes';
 import { ApiService } from './services/api.service';
-import { MatDialogModule } from '@angular/material/dialog';
 import { BannerService } from './services/banner.service';
 
 @Component({
@@ -22,6 +21,7 @@ export class AppComponent implements AfterContentInit {
   constructor(public api: ApiService, public banner: BannerService) {}
 
   async ngAfterContentInit() {
+    this.banner.init(this.state);
     await this.authenticate();
     await this.getData();
   }

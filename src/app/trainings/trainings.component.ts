@@ -1,14 +1,7 @@
 import { eventbriteEvent, attendee, State } from '../classes';
-import {
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  ViewChild,
-} from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ApiService } from '../services/api.service';
 import facilitatorList from './../CTs.json';
-import { DataService } from '../services/data.service';
 import { ValidateService } from '../services/validate.service';
 import { BannerService } from '../services/banner.service';
 
