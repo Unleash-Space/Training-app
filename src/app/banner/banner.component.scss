@@ -1,26 +1,48 @@
-.banner {
-  width: 100%;
-  height: 5%;
-  display: flex;
+.banner-cont {
   bottom: 0;
   position: fixed;
-  align-items: center;
-  transition: 0.5s ease;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 
-  div {
-    margin: auto;
-    color: black;
+  .banner {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    position: relative;
+    align-items: center;
+    transition: 0.5s ease;
+
+    .text {
+      margin: auto;
+      color: black;
+    }
+
+    .close {
+      position: absolute;
+      right: 50px;
+      color: black;
+      cursor: pointer;
+      display: none;
+      font-size: larger;
+    }
+
+    &.error {
+      background-color: #ff5353;
+    }
+
+    &.info {
+      background-color: #53baff;
+    }
+
+    &.success {
+      background-color: #53ffa9;
+    }
   }
 
-  &.error {
-    background-color: #ff5353;
-  }
-
-  &.info {
-    background-color: #53baff;
-  }
-
-  &.success {
-    background-color: #53ffa9;
+  .banner:hover {
+    .close {
+      display: block;
+    }
   }
 }

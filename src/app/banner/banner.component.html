@@ -1,3 +1,7 @@
-<div *ngIf="state.banner.open" [class]="'banner ' + state.banner.type">
-  <div>{{ state.banner.text }}</div>
+<div class="banner-cont">
+  <div *ngFor="let banner of state.banners" [class]="'banner ' + banner.type">
+    <div class="text">{{ banner.text }}</div>
+
+    <div class="close" (click)="close(banner)">x</div>
+  </div>
 </div>

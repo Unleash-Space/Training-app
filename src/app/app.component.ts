@@ -15,7 +15,7 @@ export class AppComponent implements AfterContentInit {
     authenticated: false,
     trainings: [],
     selectedFacilitator: '',
-    banner: { open: false },
+    banners: [],
     members: [],
   };
 
@@ -67,7 +67,7 @@ export class AppComponent implements AfterContentInit {
         currentTime - lastSignedIn < 3000000
       ) {
         this.state.authenticated = true;
-        this.state.banner.open = false;
+        this.banner.clear();
         this.getData();
         return;
       }

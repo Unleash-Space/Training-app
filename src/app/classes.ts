@@ -35,14 +35,15 @@ export type State = {
   authenticated: boolean;
   trainings: eventbriteEvent[];
   selectedFacilitator: string;
-  banner: Banner;
+  banners: Banner[];
   members: Member[];
 };
 
 export type Banner = {
-  open: boolean;
-  text?: string;
-  type?: 'error' | 'success' | 'info' | 'warning';
+  text: string;
+  type: 'error' | 'success' | 'info' | 'warning';
+  uuid: string;
+  timeOut: number;
 };
 
 export type Member = {

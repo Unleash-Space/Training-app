@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { State } from '../classes';
+import { Banner, State } from '../classes';
+import { BannerComponent } from '../banner/banner.component';
 
 @Injectable({
   providedIn: 'root',
@@ -18,16 +19,33 @@ export class BannerService {
     type: 'success' | 'info' | 'error' | 'warning',
     duration: number = 0
   ) {
-    this.state.banner.text = message;
-    this.state.banner.type = type;
-    this.state.banner.open = true;
+    const uuid = crypto.randomUUID();
+    const banner: Banner = {
+      text: message,
+      type: type,
+      uuid: uuid,
+      timeOut: duration,
+    };
+
+    this.generate(banner);
+
     if (duration == 0) return;
     setTimeout(() => {
-      this.state.banner.open = false;
+      this.destroy(banner.uuid!);
     }, duration);
   }
 
-  async hide(id: string, time: number = 0) {
-    // TODO destroy banner
+  generate(banner: Banner) {
+    this.state.banners.push(banner);
+  }
+
+  destroy(id: string) {
+    this.state.banners = this.state.banners.filter(
+      (banner) => banner.uuid != id
+    );
+  }
+
+  clear() {
+    this.state.banners = [];
   }
 }
