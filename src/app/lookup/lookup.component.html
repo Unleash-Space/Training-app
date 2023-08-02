@@ -12,7 +12,7 @@
     <button mat-raised-button color="primary" (click)="search()">Search</button>
   </div>
 
-  <div class="list-container" *ngIf="member">
+  <div class="list-container" *ngIf="member" @createDestroy>
     <div class="person-details">
       <h1>{{ member.firstName }} {{ member.lastName }}</h1>
       <h3>{{ member.email }}</h3>

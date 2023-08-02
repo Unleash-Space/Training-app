@@ -4,11 +4,30 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from './dialog/dialog.component';
 import { BannerService } from '../services/banner.service';
 import { DataService } from '../services/data.service';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 
 @Component({
   selector: 'app-lookup',
   templateUrl: './lookup.component.html',
   styleUrls: ['./lookup.component.scss'],
+  animations: [
+    trigger('createDestroy', [
+      state('in', style({ transform: 'translateX(0)' })),
+      transition('void => *', [
+        style({ transform: 'translateX(100%)' }),
+        animate(100),
+      ]),
+      transition('* => void', [
+        animate(100, style({ transform: 'translateX(100%)' })),
+      ]),
+    ]),
+  ],
 })
 export class LookupComponent {
   @Input() state!: State;
@@ -37,9 +56,9 @@ export class LookupComponent {
     public data: DataService
   ) {}
 
-  search() {
+  search(showMessage: boolean = true) {
     this.member = this.data.searchMember(this.upi);
-    if (!this.member) {
+    if (showMessage && !this.member) {
       this.bannerUuid = this.banner.updateOrCreate(
         this.bannerUuid,
         'Member not found',
@@ -77,10 +96,10 @@ export class LookupComponent {
     this.member = null;
     if (this.upi == null) return;
     // must be 6,7 or 9 characters long for all UPI/ID lengths
-    if (this.upi.length < 7) return;
+    if (this.upi.length < 6) return;
     if (this.upi.length == 8) return;
     if (this.upi.length > 9) return;
-    this.search();
+    this.search(false);
   }
 
   openDialog(type: string): void {
