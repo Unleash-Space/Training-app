@@ -61,6 +61,8 @@ export class BannerService {
     banner.text = message;
     banner.type = type;
 
+    if (duration == 0) return id;
+
     setTimeout(() => {
       this.destroy(banner.uuid!);
     }, duration);

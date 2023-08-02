@@ -33,7 +33,7 @@ export class AppComponent implements AfterContentInit {
   }
 
   async getData() {
-    const BannerUuid = this.banner.show('Loading...', 'info');
+    const BannerUuid = this.banner.show('Loading eventbrite...', 'info');
     const res = await this.api.getTodaysEvents();
 
     this.state.trainings = res.trainings;
@@ -43,6 +43,8 @@ export class AppComponent implements AfterContentInit {
         'Error Fetching Eventbrite Data',
         'error'
       );
+
+    this.banner.update(BannerUuid, 'Loading data...', 'info');
 
     this.getSheetData(BannerUuid);
     return;
@@ -61,16 +63,16 @@ export class AppComponent implements AfterContentInit {
         3000
       );
     if (sheetsData.status > 400)
-      return this.banner.update(
-        BannerUuid,
-        'Error Fetching Member Data',
-        'error'
-      );
+      return this.banner.update(BannerUuid, 'Error Fetching Data', 'error');
     return this.banner.update(BannerUuid, 'Something went wrong', 'error');
   }
 
-  async authenticate() {
-    const authBanner = this.banner.show('Authenticating...', 'info');
+  async authenticate(authBanner: string = '') {
+    authBanner = this.banner.updateOrCreate(
+      authBanner,
+      'Authenticating...',
+      'info'
+    );
     const currentTime = new Date().getTime();
     const lastSignedIn = Number(sessionStorage.getItem('time')) ?? 0;
 
@@ -81,7 +83,7 @@ export class AppComponent implements AfterContentInit {
         currentTime - lastSignedIn < 3000000
       ) {
         this.state.authenticated = true;
-        this.banner.update(authBanner, 'Authenticated :)', 'success');
+        this.banner.update(authBanner, 'Authenticated :)', 'success', 3000);
         return;
       }
 
@@ -93,7 +95,7 @@ export class AppComponent implements AfterContentInit {
           res.getAuthResponse().access_token
         );
         sessionStorage.setItem('time', '' + currentTime);
-        this.authenticate();
+        this.authenticate(authBanner);
       });
     });
   }
