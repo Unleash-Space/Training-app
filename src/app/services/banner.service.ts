@@ -14,11 +14,11 @@ export class BannerService {
     this.state = state;
   }
 
-  async show(
+  show(
     message: string,
     type: 'success' | 'info' | 'error' | 'warning',
     duration: number = 0
-  ) {
+  ): string {
     const uuid = crypto.randomUUID();
     const banner: Banner = {
       text: message,
@@ -29,10 +29,43 @@ export class BannerService {
 
     this.generate(banner);
 
-    if (duration == 0) return;
+    if (duration == 0) return uuid;
+
     setTimeout(() => {
       this.destroy(banner.uuid!);
     }, duration);
+
+    return uuid;
+  }
+
+  updateOrCreate(
+    id: string,
+    message: string,
+    type: 'success' | 'info' | 'error' | 'warning',
+    duration: number = 0
+  ) {
+    const banner = this.state.banners.find((banner) => banner.uuid == id);
+    if (banner == undefined) return this.show(message, type, duration);
+    return this.update(id, message, type, duration);
+  }
+
+  update(
+    id: string,
+    message: string,
+    type: 'success' | 'info' | 'error' | 'warning',
+    duration: number = 0
+  ): string {
+    const banner = this.state.banners.find((banner) => banner.uuid == id);
+    if (banner == undefined) return id;
+
+    banner.text = message;
+    banner.type = type;
+
+    setTimeout(() => {
+      this.destroy(banner.uuid!);
+    }, duration);
+
+    return id;
   }
 
   generate(banner: Banner) {

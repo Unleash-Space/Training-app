@@ -97,13 +97,6 @@ export class TrainingsComponent {
         20000
       );
 
-    if (!this.state.authenticated)
-      return this.banner.show(
-        'Please Authenticate With Google',
-        'error',
-        20000
-      );
-
     if (!valid)
       return this.banner.show(
         "One of the attendees doesn't seem right",
@@ -111,7 +104,7 @@ export class TrainingsComponent {
         20000
       );
 
-    this.submitData();
+    return this.submitData();
   }
 
   searchMember() {}

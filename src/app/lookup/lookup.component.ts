@@ -15,6 +15,7 @@ export class LookupComponent {
   @Output() stateChange = new EventEmitter<State>();
   upi: string = '';
   trainings: Training[] = [];
+  bannerUuid: string = '';
   member: Member | undefined | null = undefined;
   trainingsMap: Training[] = [
     { name: 'VR', value: 1024, venue: 'tech-hub' },
@@ -38,6 +39,14 @@ export class LookupComponent {
 
   search() {
     this.member = this.data.searchMember(this.upi);
+    if (!this.member) {
+      this.bannerUuid = this.banner.updateOrCreate(
+        this.bannerUuid,
+        'Member not found',
+        'info',
+        3000
+      );
+    }
     this.updateTrainings();
   }
 

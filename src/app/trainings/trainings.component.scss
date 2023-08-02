@@ -7,12 +7,13 @@
   width: 100%;
   tr {
     th {
-      text-align: left;
+      text-align: center;
+      padding-bottom: 15px;
     }
 
     td {
       mat-form-field {
-        width: calc(100% - 10px);
+        width: calc(100% - 20px);
       }
     }
   }
@@ -127,10 +128,6 @@ mat-checkbox {
     font-size: 1.5em;
     color: white;
   }
-}
-
-th {
-  padding-bottom: 15px;
 }
 
 .validate ::ng-deep .mat-form-field-label {

@@ -25,9 +25,6 @@ export class DataService {
       return null;
     }
 
-    if (member == undefined) {
-      this.banner.show('Member not found', 'info');
-      return null;
-    } else return member;
+    return member || null;
   }
 }

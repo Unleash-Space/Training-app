@@ -33,30 +33,44 @@ export class AppComponent implements AfterContentInit {
   }
 
   async getData() {
-    this.banner.show('Loading...', 'info');
+    const BannerUuid = this.banner.show('Loading...', 'info');
     const res = await this.api.getTodaysEvents();
 
     this.state.trainings = res.trainings;
     if (res.status !== 200)
-      return this.banner.show('Error Fetching Eventbrite Data', 'error');
+      return this.banner.update(
+        BannerUuid,
+        'Error Fetching Eventbrite Data',
+        'error'
+      );
 
-    this.getSheetData();
+    this.getSheetData(BannerUuid);
     return;
   }
 
-  async getSheetData() {
+  async getSheetData(BannerUuid: string) {
     const sheetsData = await this.api.getSheetsData();
     this.state.members = sheetsData.members;
     if (sheetsData.status == 200)
-      return this.banner.show('Data Fetched', 'success', 5000);
+      return this.banner.update(BannerUuid, 'Data Fetched', 'success', 3000);
     if (sheetsData.status == 205)
-      return this.banner.show('Cached Data Fetched', 'success', 5000);
+      return this.banner.update(
+        BannerUuid,
+        'Cached Data Fetched',
+        'success',
+        3000
+      );
     if (sheetsData.status > 400)
-      return this.banner.show('Error Fetching Member Data', 'error');
+      return this.banner.update(
+        BannerUuid,
+        'Error Fetching Member Data',
+        'error'
+      );
+    return this.banner.update(BannerUuid, 'Something went wrong', 'error');
   }
 
   async authenticate() {
-    this.banner.show('Authenticating...', 'info');
+    const authBanner = this.banner.show('Authenticating...', 'info');
     const currentTime = new Date().getTime();
     const lastSignedIn = Number(sessionStorage.getItem('time')) ?? 0;
 
@@ -67,12 +81,11 @@ export class AppComponent implements AfterContentInit {
         currentTime - lastSignedIn < 3000000
       ) {
         this.state.authenticated = true;
-        this.banner.clear();
-        this.getData();
+        this.banner.update(authBanner, 'Authenticated :)', 'success');
         return;
       }
 
-      this.banner.show('You are not authenticated', 'error');
+      this.banner.update(authBanner, 'You are not authenticated', 'error');
 
       auth.signIn().then((res: any) => {
         sessionStorage.setItem(
