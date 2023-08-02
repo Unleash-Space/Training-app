@@ -46,8 +46,22 @@ export class TrainingsComponent {
     event.attendees = await this.api.getEventAttendees(event.id);
 
     event.attendees.forEach((attendee: Attendee) => {
-      attendee.upiFound = this.data.searchMember(attendee.upi) !== null;
-      attendee.idFound = this.data.searchMember(attendee.id) !== null;
+      const upiMember = this.data.searchMember(attendee.upi);
+      const idMember = this.data.searchMember(attendee.id);
+
+      // member not found
+      if (!(upiMember || idMember)) return (attendee.status = '🔴');
+      const member = (upiMember || idMember)!;
+
+      // Swaps UPI and ID if needed
+      attendee.id = member.ID;
+      attendee.upi = member.upi;
+
+      // member found
+      if (upiMember && idMember == upiMember) return (attendee.status = '🟢');
+
+      // conflicting data
+      return (attendee.status = '🟠');
     });
 
     this.disableSubmit = false;

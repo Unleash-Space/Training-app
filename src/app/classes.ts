@@ -25,7 +25,7 @@ export class Attendee {
   email: string = '';
   attending: boolean = false;
   idFound?: boolean = false;
-  upiFound?: boolean = false;
+  status?: string = '';
 }
 
 export type Tab = 'Training' | 'Lookup' | 'Certification';

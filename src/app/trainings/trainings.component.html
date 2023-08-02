@@ -58,13 +58,7 @@
         </tr>
         <tr *ngFor="let attendee of selectedEvent.attendees">
           <td class="member">
-            {{
-              attendee.upiFound && attendee.idFound
-                ? "🟢"
-                : attendee.upiFound || attendee.idFound
-                ? "🟠"
-                : "🔴"
-            }}
+            {{ attendee.status }}
           </td>
 
           <td class="validate">
