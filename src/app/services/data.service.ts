@@ -16,14 +16,11 @@ export class DataService {
 
   searchMember(upi: string): Member | null {
     upi = upi.toLowerCase();
+    if (this.state.members.length == 0) return null;
+
     const member = this.state.members.find(
       (member) => member.upi.toLowerCase() == upi || member.ID == upi
     );
-
-    if (this.state.members.length == 0) {
-      this.banner.show('Data not loaded', 'error');
-      return null;
-    }
 
     return member || null;
   }
