@@ -1,9 +1,9 @@
 import { SecurityService } from './security.service';
 import { Injectable } from '@angular/core';
 import KEYS from '../keys.json';
-import { Member, Attendee, eventbriteEvent } from '../classes';
+import { Member, eventbriteEvent } from '../classes';
 
-import { GoogleApiService, GoogleAuthService } from 'ng-gapi';
+import { GoogleApiService } from 'ng-gapi';
 @Injectable({
   providedIn: 'root',
 })
@@ -126,10 +126,10 @@ export class SheetsService {
   }
 
   public async getSheetsData(): Promise<{ members: Member[]; status: number }> {
-    var API_URL: string = `https://content-sheets.googleapis.com/v4/spreadsheets/${KEYS.sheetID}/values/Member-lookup!A:F`;
+    var API_URL: string = `https://sheets.googleapis.com/v4/spreadsheets/${KEYS.sheetID}/values/Members!D:AL`;
 
-    const lastFetchedMembers =
-      Number(localStorage.getItem('lastFetchedMembers')) ?? 0;
+    const lastFetchedMembers = 0;
+    // Number(localStorage.getItem('lastFetchedMembers')) ?? 0;
 
     // 10 min
     if (new Date().getTime() - lastFetchedMembers < 3000000) {
@@ -173,6 +173,8 @@ export class SheetsService {
       'lastFetchedMembers',
       JSON.stringify(new Date().getTime())
     );
+
+    console.log(members);
 
     return { members, status: res.status };
   }

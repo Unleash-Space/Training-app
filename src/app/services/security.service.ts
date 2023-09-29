@@ -1,4 +1,3 @@
-import { SheetsService } from './sheets.service';
 import { Injectable } from '@angular/core';
 
 import { GoogleAuthService } from 'ng-gapi';

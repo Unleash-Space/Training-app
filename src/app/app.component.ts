@@ -56,6 +56,7 @@ export class AppComponent implements AfterContentInit {
 
   async getSheetData(BannerUuid: string) {
     const sheetsData = await this.sheet.getSheetsData();
+
     this.state.members = sheetsData.members;
     if (sheetsData.status == 200)
       return this.banner.update(BannerUuid, 'Data Fetched', 'success', 3000);
@@ -81,10 +82,11 @@ export class AppComponent implements AfterContentInit {
     const lastSignedIn = Number(sessionStorage.getItem('time')) ?? 0;
 
     (await this.security.signIn()).subscribe((auth) => {
-      console.log(auth.currentUser.get().getId());
       if (
         auth.isSignedIn.get() == true &&
-        auth.currentUser.get().getId() == '102985056909257225252' &&
+        ['102985056909257225252', '106162011548186143809'].includes(
+          auth.currentUser.get().getId()
+        ) &&
         currentTime - lastSignedIn < 3000000
       ) {
         this.state.authenticated = true;
