@@ -1,6 +1,8 @@
+import { EventbriteService } from './services/eventbrite.service';
+import { SheetsService } from './services/sheets.service';
+import { SecurityService } from './services/security.service';
 import { AfterContentInit, Component } from '@angular/core';
 import { State } from './classes';
-import { ApiService } from './services/api.service';
 import { BannerService } from './services/banner.service';
 import { ServicesService } from './services/services.service';
 
@@ -20,7 +22,9 @@ export class AppComponent implements AfterContentInit {
   };
 
   constructor(
-    public api: ApiService,
+    public sheet: SheetsService,
+    public eventbrite: EventbriteService,
+    public security: SecurityService,
     public banner: BannerService,
     public services: ServicesService
   ) {}
@@ -34,7 +38,7 @@ export class AppComponent implements AfterContentInit {
 
   async getData() {
     const BannerUuid = this.banner.show('Loading eventbrite...', 'info');
-    const res = await this.api.getTodaysEvents();
+    const res = await this.eventbrite.getTodaysEvents();
 
     this.state.trainings = res.trainings;
     if (res.status !== 200)
@@ -51,7 +55,7 @@ export class AppComponent implements AfterContentInit {
   }
 
   async getSheetData(BannerUuid: string) {
-    const sheetsData = await this.api.getSheetsData();
+    const sheetsData = await this.sheet.getSheetsData();
     this.state.members = sheetsData.members;
     if (sheetsData.status == 200)
       return this.banner.update(BannerUuid, 'Data Fetched', 'success', 3000);
@@ -76,10 +80,11 @@ export class AppComponent implements AfterContentInit {
     const currentTime = new Date().getTime();
     const lastSignedIn = Number(sessionStorage.getItem('time')) ?? 0;
 
-    (await this.api.signIn()).subscribe((auth) => {
+    (await this.security.signIn()).subscribe((auth) => {
+      console.log(auth.currentUser.get().getId());
       if (
         auth.isSignedIn.get() == true &&
-        auth.currentUser.get().getId() == '106162011548186143809' &&
+        auth.currentUser.get().getId() == '102985056909257225252' &&
         currentTime - lastSignedIn < 3000000
       ) {
         this.state.authenticated = true;
@@ -91,7 +96,7 @@ export class AppComponent implements AfterContentInit {
 
       auth.signIn().then((res: any) => {
         sessionStorage.setItem(
-          ApiService.SESSION_STORAGE_KEY,
+          SecurityService.SESSION_STORAGE_KEY,
           res.getAuthResponse().access_token
         );
         sessionStorage.setItem('time', '' + currentTime);

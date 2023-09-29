@@ -1,6 +1,6 @@
+import { SheetsService } from './../../services/sheets.service';
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ApiService } from 'src/app/services/api.service';
 import { Member, State } from 'src/app/classes';
 import facilitatorList from './../../CTs.json';
 import KEYS from './../../keys.json';
@@ -17,7 +17,7 @@ export class DialogComponent {
   facilitators = facilitatorList;
 
   constructor(
-    public api: ApiService,
+    public sheet: SheetsService,
     public dialogRef: MatDialogRef<DialogComponent>,
     public banner: BannerService,
     @Inject(MAT_DIALOG_DATA)
@@ -44,7 +44,7 @@ export class DialogComponent {
   }
 
   async submitUserData() {
-    var res = await this.api.insertCertificationData(
+    var res = await this.sheet.insertCertificationData(
       this.data.member,
       this.data.training,
       this.selectedFacilitator

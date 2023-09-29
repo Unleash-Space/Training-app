@@ -1,6 +1,7 @@
+import { EventbriteService } from './../services/eventbrite.service';
 import { eventbriteEvent, Attendee, State } from '../classes';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ApiService } from '../services/api.service';
+import { SheetsService } from '../services/sheets.service';
 import facilitatorList from './../CTs.json';
 import { ValidateService } from '../services/validate.service';
 import { BannerService } from '../services/banner.service';
@@ -21,7 +22,8 @@ export class TrainingsComponent {
   @Output() stateChange = new EventEmitter<State>();
 
   constructor(
-    public api: ApiService,
+    public sheet: SheetsService,
+    public eventbrite: EventbriteService,
     public validate: ValidateService,
     public banner: BannerService,
     public data: DataService
@@ -43,7 +45,7 @@ export class TrainingsComponent {
     if (event.fetchedAttendees) return;
 
     event.fetchedAttendees = true;
-    event.attendees = await this.api.getEventAttendees(event.id);
+    event.attendees = await this.eventbrite.getEventAttendees(event.id);
 
     event.attendees.forEach((attendee: Attendee) => {
       const upiMember = this.data.searchMember(attendee.upi);
@@ -146,7 +148,7 @@ export class TrainingsComponent {
     this.disableSubmit = true;
     var table = this.getSheetName(this.selectedEvent.title);
 
-    var res = await this.api.insertData(
+    var res = await this.sheet.insertData(
       this.selectedEvent,
       table,
       this.state.selectedFacilitator
