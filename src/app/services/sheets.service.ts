@@ -126,12 +126,12 @@ export class SheetsService {
   }
 
   public async getSheetsData(): Promise<{ members: Member[]; status: number }> {
-    var API_URL: string = `https://sheets.googleapis.com/v4/spreadsheets/${KEYS.sheetID}/values/Members!D:AL`;
+    var API_URL: string = `https://sheets.googleapis.com/v4/spreadsheets/${KEYS.sheetID}/values/Members!AN:AS`;
 
-    const lastFetchedMembers = 0;
-    // Number(localStorage.getItem('lastFetchedMembers')) ?? 0;
+    const lastFetchedMembers =
+      Number(localStorage.getItem('lastFetchedMembers')) ?? 0;
 
-    // 10 min
+    // only refresh after 10 min
     if (new Date().getTime() - lastFetchedMembers < 3000000) {
       const members = localStorage.getItem('members');
       if (members) return { members: JSON.parse(members), status: 205 };
@@ -157,15 +157,22 @@ export class SheetsService {
 
     const data = JSON.parse(result).values;
 
-    const members: Member[] = data.map((e: any) => {
-      return {
-        upi: e[0],
-        ID: e[1],
-        firstName: e[2],
-        lastName: e[3],
-        email: e[4],
-        trainings: e[5],
+    const members: Member[] = [];
+
+    data.forEach((memberArray: any) => {
+      if (memberArray[0] === 'ID Number') return;
+      if (memberArray[0] === '') return;
+
+      const currentMember = {
+        ID: memberArray[0],
+        upi: memberArray[1],
+        firstName: memberArray[2],
+        lastName: memberArray[3],
+        email: memberArray[4],
+        trainings: memberArray[5],
       };
+
+      members.push(currentMember);
     });
 
     localStorage.setItem('members', JSON.stringify(members));
@@ -173,8 +180,6 @@ export class SheetsService {
       'lastFetchedMembers',
       JSON.stringify(new Date().getTime())
     );
-
-    console.log(members);
 
     return { members, status: res.status };
   }
