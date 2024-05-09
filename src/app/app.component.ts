@@ -26,7 +26,7 @@ export class AppComponent implements AfterContentInit {
     public eventbrite: EventbriteService,
     public security: SecurityService,
     public banner: BannerService,
-    public services: ServicesService
+    public services: ServicesService,
   ) {}
 
   async ngAfterContentInit() {
@@ -45,7 +45,32 @@ export class AppComponent implements AfterContentInit {
       return this.banner.update(
         BannerUuid,
         'Error Fetching Eventbrite Data',
-        'error'
+        'error',
+      );
+
+    this.banner.update(BannerUuid, 'Loading data...', 'info');
+
+    this.getSheetData(BannerUuid);
+    return;
+  }
+
+  async onNewDate(date: Date) {
+    this.state = {
+      ...this.state,
+      trainings: [],
+      selectedFacilitator: '',
+      members: [],
+    };
+
+    const BannerUuid = this.banner.show('Loading eventbrite...', 'info');
+    const res = await this.eventbrite.getEventsFor(date);
+
+    this.state.trainings = res.trainings;
+    if (res.status !== 200)
+      return this.banner.update(
+        BannerUuid,
+        'Error Fetching Eventbrite Data',
+        'error',
       );
 
     this.banner.update(BannerUuid, 'Loading data...', 'info');
@@ -65,7 +90,7 @@ export class AppComponent implements AfterContentInit {
         BannerUuid,
         'Cached Data Fetched',
         'success',
-        3000
+        3000,
       );
     if (sheetsData.status > 400)
       return this.banner.update(BannerUuid, 'Error Fetching Data', 'error');
@@ -76,7 +101,7 @@ export class AppComponent implements AfterContentInit {
     authBanner = this.banner.updateOrCreate(
       authBanner,
       'Authenticating...',
-      'info'
+      'info',
     );
     const currentTime = new Date().getTime();
     const lastSignedIn = Number(sessionStorage.getItem('time')) ?? 0;
@@ -85,7 +110,7 @@ export class AppComponent implements AfterContentInit {
       if (
         auth.isSignedIn.get() == true &&
         ['102985056909257225252', '106162011548186143809'].includes(
-          auth.currentUser.get().getId()
+          auth.currentUser.get().getId(),
         ) &&
         currentTime - lastSignedIn < 3000000
       ) {
@@ -99,7 +124,7 @@ export class AppComponent implements AfterContentInit {
       auth.signIn().then((res: any) => {
         sessionStorage.setItem(
           SecurityService.SESSION_STORAGE_KEY,
-          res.getAuthResponse().access_token
+          res.getAuthResponse().access_token,
         );
         sessionStorage.setItem('time', '' + currentTime);
         this.authenticate(authBanner);

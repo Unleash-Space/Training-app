@@ -1,6 +1,16 @@
 <div class="container">
   <h1>Training</h1>
 
+  <div style="display: flex; align-items: center; justify-content: center; padding-bottom: 1rem;">
+      <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Trainings date</mat-label>
+        <input matInput [matDatepicker]="picker" placeholder="Today"  (dateChange)="onDateChange($event)">
+        <mat-datepicker-toggle matSuffix [for]="picker">
+          <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+        </mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+  </div>
   <div class="row">
     <mat-form-field class="event-select" appearance="fill">
       <mat-label>Select an event</mat-label>

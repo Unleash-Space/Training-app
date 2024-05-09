@@ -2,6 +2,7 @@
 
 <app-trainings
   [(state)]="state"
+  (chooseNewDate)="onNewDate($event)"
   *ngIf="state.tab == 'Training'"
 ></app-trainings>
 

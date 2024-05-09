@@ -37,6 +37,7 @@ let gapiClientConfig: NgGapiClientConfig = {
     BrowserModule,
     AppRoutingModule,
     MatDialogModule,
+
     MaterialModule,
     GoogleApiModule.forRoot({
       provide: NG_GAPI_CONFIG,

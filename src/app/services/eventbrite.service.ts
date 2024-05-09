@@ -11,16 +11,20 @@ export class EventbriteService {
 
   constructor(public sheet: SheetsService) {}
 
-  async getTodaysEvents(): Promise<any> {
-    try {
-      const NOW = new Date();
-      const startDate = `${NOW.getFullYear()}-${
-        NOW.getMonth() + 1
-      }-${NOW.getDate()}`;
 
-      const dateEnd = `${NOW.getFullYear()}-${
-        NOW.getMonth() + 1
-      }-${NOW.getDate()}`;
+  async getTodaysEvents(): Promise<any> {
+    return await this.getEventsFor(new Date());
+  }
+
+  async getEventsFor(date: Date): Promise<any> {
+    try {
+      const startDate = `${date.getFullYear()}-${
+        date.getMonth() + 1
+      }-${date.getDate()}`;
+
+      const dateEnd = `${date.getFullYear()}-${
+        date.getMonth() + 1
+      }-${date.getDate()}`;
 
       const URL = `${this.eventbriteURL}/events/?start_date.range_start=${startDate}&start_date.range_end=${dateEnd}&token=${KEYS.eventbrite}`;
 

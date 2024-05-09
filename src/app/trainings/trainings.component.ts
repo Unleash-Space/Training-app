@@ -1,11 +1,19 @@
 import { EventbriteService } from './../services/eventbrite.service';
 import { eventbriteEvent, Attendee, State } from '../classes';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { SheetsService } from '../services/sheets.service';
 import facilitatorList from './../CTs.json';
 import { ValidateService } from '../services/validate.service';
 import { BannerService } from '../services/banner.service';
 import { DataService } from '../services/data.service';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-trainings',
@@ -20,14 +28,19 @@ export class TrainingsComponent {
 
   @Input() state!: State;
   @Output() stateChange = new EventEmitter<State>();
+  @Output() chooseNewDate = new EventEmitter<Date>();
 
   constructor(
     public sheet: SheetsService,
     public eventbrite: EventbriteService,
     public validate: ValidateService,
     public banner: BannerService,
-    public data: DataService
+    public data: DataService,
   ) {}
+
+  onDateChange(event: MatDatepickerInputEvent<Date>) {
+    this.chooseNewDate.emit(event.value ?? new Date());
+  }
 
   newAttendee() {
     this.selectedEvent.attendees.push({
@@ -96,14 +109,14 @@ export class TrainingsComponent {
       return this.banner.show(
         'Please Authenticate With Google',
         'error',
-        20000
+        20000,
       );
 
     if (!valid)
       return this.banner.show(
         "One of the attendees doesn't seem right",
         'error',
-        20000
+        20000,
       );
 
     return this.submitData();
@@ -151,19 +164,22 @@ export class TrainingsComponent {
     var res = await this.sheet.insertData(
       this.selectedEvent,
       table,
-      this.state.selectedFacilitator
+      this.state.selectedFacilitator,
     );
 
     if (res === 200) {
       this.banner.show(
         `Data Submitted Successfully`,
         'success',
-        1000 * 60 * 60
+        1000 * 60 * 60,
       );
 
-      setTimeout(() => {
-        this.disableSubmit = false;
-      }, 1000 * 60 * 10);
+      setTimeout(
+        () => {
+          this.disableSubmit = false;
+        },
+        1000 * 60 * 10,
+      );
     } else {
       this.banner.show(`Something went wrong code: ${res}`, 'error');
       this.disableSubmit = false;
