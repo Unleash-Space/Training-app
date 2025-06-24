@@ -4,7 +4,7 @@
   <p>{{ data.member.upi }}</p>
   <p>{{ data.member.ID }}</p>
   <p>{{ data.member.email }}</p>
-  <h2>{{ data.training }}</h2>
+  <h2>{{ data.training_table }}</h2>
 </div>
 <mat-form-field>
   <mat-label>Password</mat-label>
@@ -34,5 +34,5 @@
 
 <div mat-dialog-actions>
   <button mat-button (click)="close()">Cancel</button>
-  <button mat-raised-button color="primary" (click)="confirm()">Confirm</button>
+  <button mat-raised-button color="primary" (click)="confirm()" [disabled]="!password || !selectedFacilitator">Confirm</button>
 </div>

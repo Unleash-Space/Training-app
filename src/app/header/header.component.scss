@@ -44,4 +44,35 @@
   img {
     height: 35px;
   }
+
+  .clear-cache-container {
+    position: absolute;
+    right: 50px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+
+    .clear-cache-btn {
+      background-color: #fd651f;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: #e55a1a;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(253, 101, 31, 0.3);
+      }
+
+      &:active {
+        transform: translateY(0);
+        box-shadow: 0 1px 4px rgba(253, 101, 31, 0.3);
+      }
+    }
+  }
 }

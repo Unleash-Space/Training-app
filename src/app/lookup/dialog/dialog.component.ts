@@ -21,7 +21,7 @@ export class DialogComponent {
     public dialogRef: MatDialogRef<DialogComponent>,
     public banner: BannerService,
     @Inject(MAT_DIALOG_DATA)
-    public data: { member: Member; training: string; state: State }
+    public data: { member: Member; training_table: string; state: State }
   ) {}
 
   onNoClick(): void {
@@ -46,7 +46,7 @@ export class DialogComponent {
   async submitUserData() {
     var res = await this.sheet.insertCertificationData(
       this.data.member,
-      this.data.training,
+      this.data.training_table,
       this.selectedFacilitator
     );
 

@@ -38,17 +38,17 @@ export class LookupComponent {
   bannerUuid: string = '';
   member: Member | undefined | null = undefined;
   trainingsMap: Training[] = [
-    { name: 'VR', value: 1024, venue: 'tech-hub' },
-    { name: 'AI', value: 512, venue: 'tech-hub' },
-    { name: '5G', value: 256, venue: 'tech-hub' },
-    { name: 'IoT', value: 128, venue: 'tech-hub' },
-    { name: '3D Scanner', value: 64, venue: '' },
-    { name: 'Sewing', value: 32, venue: 'maker-space' },
-    { name: 'Soldering', value: 16, venue: 'maker-space' },
-    { name: 'Laser', value: 8, venue: 'maker-space' },
-    { name: 'Vinyl', value: 4, venue: 'maker-space' },
-    { name: 'CNC router', value: 2, venue: 'maker-space' },
-    { name: '3D Printer', value: 1, venue: 'maker-space' },
+    { name: 'VR', value: 1024, venue: 'tech-hub', table: 'Virtual Reality',  },
+    { name: 'AI', value: 512, venue: 'tech-hub', table: 'AI',  },
+    { name: '5G', value: 256, venue: 'tech-hub', table: '5G',  },
+    { name: 'IoT', value: 128, venue: 'tech-hub', table: 'IoT',  },
+    { name: '3D Scanner', value: 64, venue: '', table: '3D Scanner' },
+    { name: 'Sewing', value: 32, venue: 'maker-space', table: 'Sewing',  },
+    { name: 'Soldering', value: 16, venue: 'maker-space', table: 'Soldering' },
+    { name: 'Laser', value: 8, venue: 'maker-space', table: 'Laser',  },
+    { name: 'Vinyl', value: 4, venue: 'maker-space', table: 'Vinyl',  },
+    { name: 'CNC router', value: 2, venue: 'maker-space', table: 'CNC router' },
+    { name: '3D Printer', value: 1, venue: 'maker-space', table: '3D Printer' },
   ];
 
   constructor(
@@ -83,6 +83,7 @@ export class LookupComponent {
         name: trainingsMap[i].name,
         value: trainingsMap[i].value,
         venue: trainingsMap[i].venue,
+        table: trainingsMap[i].table,
       };
       if (trainingsValue >= value) {
         trainingsValue -= value;
@@ -105,21 +106,28 @@ export class LookupComponent {
   }
 
   openDialog(type: string): void {
+    console.log(`Opening dialog for training: ${type}`);
+
+
     const dialogRef = this.dialog.open(DialogComponent, {
-      data: { member: this.member, training: type, state: this.state },
+      data: { member: this.member, training_table: type, state: this.state },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       const trainingValue = this.trainingsMap.find(
-        (training) => training.name == type
+        (training) => training.table == type
       )!;
 
       console.log(`Training ${type} completed: ${result}`);
 
       if (result) {
-        this.trainings.find((training) => training.name == type)!.complete =
+        this.trainings.find((training) => training.table == type)!.complete =
           true;
-        this.member!.trainings += trainingValue.value;
+
+        console.log(`Adding ${trainingValue.value} to member's trainings : ${this.member!.trainings} (${JSON.stringify(trainingValue)}) (${JSON.stringify(this.member)})`);
+
+        // this.member!.trainings can be a number or a string, so to forceable parse
+        this.member!.trainings = Number.parseInt((""+this.member!.trainings) as unknown as string) + trainingValue.value;
 
         this.sheet.saveSheetCache(this.state.members);
       }

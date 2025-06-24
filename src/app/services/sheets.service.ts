@@ -189,4 +189,9 @@ export class SheetsService {
   public async saveSheetCache(members: Member[]) {
     localStorage.setItem('members', JSON.stringify(members));
   }
+
+  public clearCache(): void {
+    localStorage.removeItem('members');
+    localStorage.removeItem('lastFetchedMembers');
+  }
 }

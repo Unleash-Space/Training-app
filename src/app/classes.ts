@@ -59,5 +59,6 @@ export type Training = {
   name: string;
   value: number;
   venue: 'Online' | 'maker-space' | 'tech-hub' | '';
+  table: string;
   complete?: boolean;
 };
