@@ -106,7 +106,11 @@ export class AppComponent implements AfterContentInit {
     const currentTime = new Date().getTime();
     const lastSignedIn = Number(sessionStorage.getItem('time')) ?? 0;
 
+    console.log("Starting authentication process...");
+
     (await this.security.signIn()).subscribe((auth) => {
+        console.log('Received authentication');
+
       if (
         auth.isSignedIn.get() == true &&
         ['102985056909257225252', '106162011548186143809'].includes(
@@ -116,15 +120,30 @@ export class AppComponent implements AfterContentInit {
       ) {
         this.state.authenticated = true;
         this.banner.update(authBanner, 'Authenticated :)', 'success', 3000);
+        console.log('Already authenticated');
         return;
       }
+
+
 
       this.banner.update(authBanner, 'You are not authenticated', 'error');
 
       auth.signIn().then((res: any) => {
+        let access_token = res.getAuthResponse().access_token;
+
+        if (!access_token) {
+          this.banner.update(authBanner, 'Authentication Failed', 'error');
+          this.state.authenticated = false;
+          sessionStorage.removeItem(SecurityService.SESSION_STORAGE_KEY);
+          sessionStorage.removeItem('time');
+          console.error('No access token received');
+          return;
+        }
+
+
         sessionStorage.setItem(
           SecurityService.SESSION_STORAGE_KEY,
-          res.getAuthResponse().access_token,
+          access_token,
         );
         sessionStorage.setItem('time', '' + currentTime);
         this.authenticate(authBanner);

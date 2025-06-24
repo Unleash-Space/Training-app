@@ -19,7 +19,7 @@ export class DataService {
     if (this.state.members.length == 0) return null;
 
     const member = this.state.members.find(
-      (member) => member.upi.toLowerCase() == upi || member.ID == upi
+      (member) => member.upi?.toLowerCase() == upi || member.ID?.toLowerCase() == upi
     );
 
     return member || null;

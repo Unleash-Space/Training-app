@@ -175,12 +175,18 @@ export class SheetsService {
       members.push(currentMember);
     });
 
-    localStorage.setItem('members', JSON.stringify(members));
     localStorage.setItem(
       'lastFetchedMembers',
       JSON.stringify(new Date().getTime())
     );
 
+
+    this.saveSheetCache(members);
+
     return { members, status: res.status };
+  }
+
+  public async saveSheetCache(members: Member[]) {
+    localStorage.setItem('members', JSON.stringify(members));
   }
 }

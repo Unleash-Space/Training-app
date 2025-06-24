@@ -11,6 +11,7 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
+import { SheetsService } from '../services/sheets.service';
 
 @Component({
   selector: 'app-lookup',
@@ -51,6 +52,7 @@ export class LookupComponent {
   ];
 
   constructor(
+    public sheet: SheetsService,
     public dialog: MatDialog,
     public banner: BannerService,
     public data: DataService
@@ -110,12 +112,16 @@ export class LookupComponent {
     dialogRef.afterClosed().subscribe((result) => {
       const trainingValue = this.trainingsMap.find(
         (training) => training.name == type
-      )! as unknown as number;
+      )!;
+
+      console.log(`Training ${type} completed: ${result}`);
 
       if (result) {
         this.trainings.find((training) => training.name == type)!.complete =
           true;
-        this.member!.trainings += trainingValue;
+        this.member!.trainings += trainingValue.value;
+
+        this.sheet.saveSheetCache(this.state.members);
       }
     });
   }
